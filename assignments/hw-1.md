@@ -10,4 +10,8 @@ Hints:
 - prime numbers p and q
 - CRT(Chinese Remainder Theorem)
 
+Questions
 
+1. What is the differenct in speed between $c^d\equiv m \mod{n}$ and $c^d\equiv n$
+2. Use CRT to compute $c^d\equiv m'\mod{p}$ and $c^d\equiv m''\mod{q}$​ 
+3. 
