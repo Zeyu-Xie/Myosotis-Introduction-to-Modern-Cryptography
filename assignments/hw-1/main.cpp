@@ -5,13 +5,15 @@
 #include<iostream>
 using namespace std;
 
-Bint p({1,2,3,4}),q;
+Bint p,q;
 
 int main()
 {
-    cin>>p;
+    cin>>p>>q;
 
-    cout<<p<<"\n";
+    cout<<p<<" "<<q<<"\n";
+
+    cout<< (p!=q) <<"\n";
 
     cout<<"Hello World! ";
     

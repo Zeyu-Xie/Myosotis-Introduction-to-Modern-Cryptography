@@ -7,3 +7,6 @@ main: Bint.cpp main.cpp
 
 clean:
 	rm -f main
+
+clean_win:
+	del main.exe
