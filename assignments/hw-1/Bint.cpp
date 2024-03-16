@@ -179,5 +179,32 @@ Bint Bint::operator-(const Bint &other) const
         return Bint({0});
     else
     {
+        int length = digits.size();
+        std::vector<int> ans(length);
+        int tot = length - 1;
+        int tot1 = digits.size() - 1;
+        int tot2 = other.digits.size() - 1;
+        int t = 0;
+        while (tot >= 0)
+        {
+            int a = (tot1 >= 0) ? digits[tot1] : 0;
+            int b = (tot2 >= 0) ? other.digits[tot2] : 0;
+            ans[tot] = a - b - t;
+            if (ans[tot] < 0)
+            {
+                ans[tot] += 10;
+                t = 1;
+            }
+            else
+                t = 0;
+            tot--;
+            tot1--;
+            tot2--;
+        }
+        if (ans[0] == 0)
+            ans.erase(ans.begin());
+        return Bint(ans);
     }
 }
+
+//
