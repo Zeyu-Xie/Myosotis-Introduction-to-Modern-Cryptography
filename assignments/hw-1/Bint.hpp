@@ -19,7 +19,6 @@ public:
     bool operator==(const Bint& other) const;
     bool operator!=(const Bint& other) const;
     
-
 private:
     std::vector<int> digits;
 };
