@@ -101,7 +101,7 @@ bool Bint::operator<(const Bint &other) const
         for (int i = 0; i < length; i++)
             if (digits[i] < other.digits[i])
                 return true;
-            else if(digits[i] > other.digits[i])
+            else if (digits[i] > other.digits[i])
                 return false;
         return false;
     }
@@ -121,7 +121,7 @@ bool Bint::operator>(const Bint &other) const
         {
             if (digits[i] > other.digits[i])
                 return true;
-            else if(digits[i] < other.digits[i])
+            else if (digits[i] < other.digits[i])
                 return false;
         }
         return false;
@@ -140,4 +140,44 @@ bool Bint::operator>=(const Bint &other) const
     if (*this < other)
         return false;
     return true;
+}
+
+// a+b，a 和 b 的大小不设限
+Bint Bint::operator+(const Bint &other) const
+{
+    int length = std::max(digits.size(), other.digits.size());
+    std::vector<int> ans(length);
+    int tot = length - 1;
+    int tot1 = digits.size() - 1;
+    int tot2 = other.digits.size() - 1;
+    int t = 0;
+    while (tot >= 0)
+    {
+        int a = (tot1 >= 0) ? digits[tot1] : 0;
+        int b = (tot2 >= 0) ? other.digits[tot2] : 0;
+        ans[tot] = a + b + t;
+        if (ans[tot] >= 10)
+        {
+            ans[tot] -= 10;
+            t = 1;
+        }
+        else
+            t = 0;
+        tot--;
+        tot1--;
+        tot2--;
+    }
+    if (t == 1)
+        ans.insert(ans.begin(), 1);
+    return Bint(ans);
+}
+
+// a-b，要求 a >= b，否则直接返回 0
+Bint Bint::operator-(const Bint &other) const
+{
+    if (*this <= other)
+        return Bint({0});
+    else
+    {
+    }
 }
