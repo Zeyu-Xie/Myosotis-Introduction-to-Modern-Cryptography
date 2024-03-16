@@ -14,6 +14,8 @@ public:
     Bint();
     Bint(vector<int> digits);
 private:
-    int length;
+    friend std::istream& operator>>(std::istream& is, Bint& bint);
+    friend std::ostream& operator<<(std::ostream& os, const Bint& bint);
+
     vector<int> digits;
 };
