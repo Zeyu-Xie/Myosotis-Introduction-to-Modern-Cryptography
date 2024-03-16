@@ -15,6 +15,7 @@ class Bint {
 public:
     Bint();
     Bint(std::vector<int> digits);
+    Bint(const Bint& other);
 
     bool operator==(const Bint& other) const;
     bool operator!=(const Bint& other) const;
@@ -22,6 +23,8 @@ public:
     bool operator>(const Bint& other) const;
     bool operator<=(const Bint& other) const;
     bool operator>=(const Bint& other) const;
+
+
     
 private:
     std::vector<int> digits;

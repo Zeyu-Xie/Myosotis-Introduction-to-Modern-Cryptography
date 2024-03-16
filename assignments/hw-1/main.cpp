@@ -1,21 +1,31 @@
 #include "Bint.hpp"
-#include<cstdio>
-#include<cstring>
-#include<algorithm>
-#include<iostream>
+#include <cstdio>
+#include <cstring>
+#include <algorithm>
+#include <iostream>
 using namespace std;
 
-Bint p,q;
+Bint p, q;
 
 int main()
 {
-    cin>>p>>q;
+    // while (1)
+    // {
+    //     cin >> p >> q;
 
-    cout<<p<<" "<<q<<"\n";
+    //     if (p == q)
+    //         cout << p << "==" << q << "\n";
+    //     if (p != q)
+    //         cout << p << "!=" << q << "\n";
+    //     if (p < q)
+    //         cout << p << "<" << q << "\n";
+    //     if (p > q)
+    //         cout << p << ">" << q << "\n";
+    //     if (p <= q)
+    //         cout << p << "<=" << q << "\n";
+    //     if (p >= q)
+    //         cout << p << ">=" << q << "\n";
+    // }
 
-    cout<< (p!=q) <<"\n";
-
-    cout<<"Hello World! ";
-    
     return 0;
 }
