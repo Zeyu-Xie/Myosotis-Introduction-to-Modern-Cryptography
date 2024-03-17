@@ -40,15 +40,15 @@ std::istream &operator>>(std::istream &is, Bint &bint)
             return is;
         }
     }
+    if (bint.digits.size() <= 0)
+        bint.digits.push_back(0);
     return is;
 }
 
 std::ostream &operator<<(std::ostream &os, const Bint &bint)
 {
     for (int i = 0; i < bint.digits.size(); i++)
-    {
         os << bint.digits[i];
-    }
     return os;
 }
 
@@ -201,7 +201,7 @@ Bint Bint::operator-(const Bint &other) const
             tot1--;
             tot2--;
         }
-        if (ans[0] == 0)
+        while (ans.size() > 0 && ans[0] == 0)
             ans.erase(ans.begin());
         return Bint(ans);
     }
@@ -251,4 +251,46 @@ Bint Bint::operator*(const Bint &other) const
     for (int j = 0; j < length2; j++)
         ans = ans + tmp[j];
     return ans;
+}
+
+// a/b，a 和 b 大小不设限
+Bint Bint::operator/(const Bint &other) const
+{
+    if (*this < other)
+        return Bint({0});
+
+    if (*this == other)
+        return Bint({1});
+
+    std::vector<int> result = digits;
+
+    for (int i = 0; i < result.size(); i++)
+        result[i] = 0;
+
+    Bint current_dividend({0});
+
+    for (int i = 0; i < digits.size(); i++)
+    {
+        int factor = 0;
+        current_dividend = current_dividend * Bint({1, 0}) + Bint({digits[i]});
+        while (current_dividend >= other * (Bint({factor + 1})))
+            factor++;
+
+        result[i] = factor;
+
+        current_dividend = current_dividend - other * (Bint({factor}));
+        while (current_dividend.digits.size() > 0 && current_dividend.digits[0] == 0)
+            current_dividend.digits.erase(current_dividend.digits.begin());
+    }
+
+    while (result.size() > 0 && result[0] == 0)
+        result.erase(result.begin());
+
+    return Bint(result);
+}
+
+// a%b，a 和 b 大小不设限
+Bint Bint::operator%(const Bint &other) const
+{
+    return (*this) - other * ((*this) / other);
 }
