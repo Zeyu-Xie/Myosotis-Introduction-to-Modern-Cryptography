@@ -1,66 +1,6 @@
 #include "Bint.hpp"
 
-// Private
-
-void Bint::_remove_front_zeros()
-{
-    while (this->digits.size() > 1 && this->digits[0] == 0)
-        this->digits.erase(this->digits.begin());
-}
-
-std::vector<int> Bint::_get_digits()
-{
-    return this->digits;
-}
-
-int Bint::_get_length()
-{
-    return this->digits.size();
-}
-
-Bint Bint::_simpleTimes(int a)
-{
-    int length = digits.size();
-    std::vector<int> ans(length);
-    int tot = length - 1;
-    int t = 0;
-    while (tot >= 0)
-    {
-        int b = (tot >= 0) ? digits[tot] : 0;
-        ans[tot] = b * a + t;
-        if (ans[tot] >= 10)
-        {
-            t = ans[tot] / 10;
-            ans[tot] %= 10;
-        }
-        else
-            t = 0;
-        tot--;
-    }
-    if (t > 0)
-        ans.insert(ans.begin(), t);
-    return Bint(ans);
-}
-
-// Public
-
-Bint::Bint() : digits(std::vector<int>({0})) {}
-
-Bint::Bint(std::vector<int> digits) : digits(digits) {}
-
-Bint::Bint(int num)
-{
-    std::string s = std::to_string(num);
-    digits = {};
-    for (int i = 0; i < s.length(); i++)
-        digits.push_back(s[i] - '0');
-}
-
-Bint::Bint(const Bint &other)
-{
-    digits = other.digits;
-}
-
+// 重载输入输出流运算符
 std::istream &operator>>(std::istream &is, Bint &bint)
 {
     std::string input;
@@ -96,7 +36,6 @@ std::istream &operator>>(std::istream &is, Bint &bint)
         bint.digits.push_back(0);
     return is;
 }
-
 std::ostream &operator<<(std::ostream &os, const Bint &bint)
 {
     for (int i = 0; i < bint.digits.size(); i++)
@@ -104,6 +43,68 @@ std::ostream &operator<<(std::ostream &os, const Bint &bint)
     return os;
 }
 
+// Private
+
+// 去除前面多余的 0
+void Bint::_remove_front_zeros()
+{
+    while (this->digits.size() > 1 && this->digits[0] == 0)
+        this->digits.erase(this->digits.begin());
+}
+// 与 int 类型 0~9 相乘
+Bint Bint::_simpleTimes(int a)
+{
+    int length = digits.size();
+    std::vector<int> ans(length);
+    int tot = length - 1;
+    int t = 0;
+    while (tot >= 0)
+    {
+        int b = (tot >= 0) ? digits[tot] : 0;
+        ans[tot] = b * a + t;
+        if (ans[tot] >= 10)
+        {
+            t = ans[tot] / 10;
+            ans[tot] %= 10;
+        }
+        else
+            t = 0;
+        tot--;
+    }
+    if (t > 0)
+        ans.insert(ans.begin(), t);
+    return Bint(ans);
+}
+
+// Public
+
+// 默认构造为 0
+Bint::Bint() : digits(std::vector<int>({0})) {}
+// 从 int 构造
+Bint::Bint(int num)
+{
+    std::string s = std::to_string(num);
+    digits = {};
+    for (int i = 0; i < s.length(); i++)
+        digits.push_back(s[i] - '0');
+}
+// 从 std::string 构造
+Bint::Bint(std::string s)
+{
+    digits = {};
+    for (int i = 0; i < s.length(); i++)
+        digits.push_back(s[i] - '0');
+}
+// 从 std::vector<int> 构造
+Bint::Bint(std::vector<int> digits) : digits(digits) {}
+
+// 复制构造
+Bint::Bint(const Bint &other)
+{
+    digits = other.digits;
+}
+
+// 重载比较运算符
 bool Bint::operator==(const Bint &other) const
 {
     int length = digits.size();
@@ -121,7 +122,6 @@ bool Bint::operator==(const Bint &other) const
 
     return true;
 }
-
 bool Bint::operator!=(const Bint &other) const
 {
     int length = digits.size();
@@ -139,7 +139,6 @@ bool Bint::operator!=(const Bint &other) const
 
     return false;
 }
-
 bool Bint::operator<(const Bint &other) const
 {
     int length = digits.size();
@@ -158,7 +157,6 @@ bool Bint::operator<(const Bint &other) const
         return false;
     }
 }
-
 bool Bint::operator>(const Bint &other) const
 {
     int length = digits.size();
@@ -179,14 +177,12 @@ bool Bint::operator>(const Bint &other) const
         return false;
     }
 }
-
 bool Bint::operator<=(const Bint &other) const
 {
     if (*this > other)
         return false;
     return true;
 }
-
 bool Bint::operator>=(const Bint &other) const
 {
     if (*this < other)
@@ -194,7 +190,7 @@ bool Bint::operator>=(const Bint &other) const
     return true;
 }
 
-// a+b，a 和 b 的大小不设限
+// 重载加、减、乘、整除、求余运算符
 Bint Bint::operator+(const Bint &other) const
 {
     int length = std::max(digits.size(), other.digits.size());
@@ -223,8 +219,6 @@ Bint Bint::operator+(const Bint &other) const
         ans.insert(ans.begin(), 1);
     return Bint(ans);
 }
-
-// a-b，要求 a >= b，否则直接返回 0
 Bint Bint::operator-(const Bint &other) const
 {
     if (*this <= other)
@@ -258,8 +252,6 @@ Bint Bint::operator-(const Bint &other) const
         return Bint(ans);
     }
 }
-
-// a*b，a 和 b 的大小不设限
 Bint Bint::operator*(const Bint &other) const
 {
     if (*this == Bint() || other == Bint())
@@ -280,8 +272,6 @@ Bint Bint::operator*(const Bint &other) const
         ans = ans + tmp[j];
     return ans;
 }
-
-// a/b，a 和 b 大小不设限
 Bint Bint::operator/(const Bint &other) const
 {
     if (*this < other)
@@ -300,7 +290,7 @@ Bint Bint::operator/(const Bint &other) const
     for (int i = 0; i < digits.size(); i++)
     {
         int factor = 0;
-        current_dividend = current_dividend * Bint({1, 0}) + Bint(digits[i]);
+        current_dividend = current_dividend * Bint("10") + Bint(digits[i]);
         while (current_dividend >= other * (Bint(factor + 1)))
             factor++;
 
@@ -315,9 +305,40 @@ Bint Bint::operator/(const Bint &other) const
 
     return Bint(result);
 }
-
-// a%b，a 和 b 大小不设限
 Bint Bint::operator%(const Bint &other) const
 {
     return (*this) - other * ((*this) / other);
+}
+
+// 获取末位
+int Bint::end()
+{
+    return *(digits.end() - 1);
+}
+// 获取长度
+int Bint::length()
+{
+    return digits.size();
+}
+
+// 是否是奇数
+bool Bint::isOdd()
+{
+    if (this->end() % 2 == 0)
+        return false;
+    return true;
+}
+// 是否是偶数
+bool Bint::isEven()
+{
+    if (this->end() % 2 == 0)
+        return true;
+    return false;
+}
+// 是否是 5 的倍数
+bool Bint::isMultipleOfFive()
+{
+    if (this->end() % 5 == 0)
+        return true;
+    return false;
 }
