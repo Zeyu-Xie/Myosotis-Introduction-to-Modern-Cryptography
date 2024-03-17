@@ -22,3 +22,6 @@ bool isBigPrime(Bint a);
 
 // 随机素数
 Bint randomBigPrime(int len);
+
+// 扩展 Euclidean
+Bint extendedEuclidean(Bint a, Bint b, Bint &x, Bint &y);

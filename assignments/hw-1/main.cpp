@@ -8,22 +8,32 @@
 using namespace std;
 
 Bint p, q;
+Bint n;
+Bint phi_n;
+Bint e, d;
 
 int main()
 {
+    // p = randomBigPrime(8);
+    // q = randomBigPrime(8);
 
-    int cnt = 25;
+    // n = p * q;
+    // phi_n = (p - Bint(1)) * (q - Bint(1));
 
-    for (int i = 100; i <= 10000; i++)
-    {
-        if (isBigPrime(Bint(i)))
-        {
-            // cout << i << "\n";
-            cnt++;
-        }
-    }
+    // cout<<"p: "<<p<<"\n";
+    // cout<<"q: "<<q<<"\n";
+    // cout<<"n: "<<n<<"\n";
+    // cout<<"phi_n: "<<phi_n<<"\n";
 
-    cout << "Total: " << cnt;
+    // e = Bint(65537);
+
+    Bint a(35), b(47);
+
+    Bint x, y;
+
+    cout << extendedEuclidean(a, b, x, y) << "\n";
+
+    cout << x << " " << y << "\n";
 
     return 0;
 }

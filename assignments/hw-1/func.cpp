@@ -1,5 +1,6 @@
 #include "func.hpp"
 
+const int primeEnd[] = {1, 3, 7, 9};
 const Bint smallPrimeList[] = {Bint(2), Bint(3), Bint(5), Bint(7), Bint(11), Bint(13), Bint(17), Bint(19), Bint(23), Bint(29), Bint(31), Bint(37), Bint(41), Bint(43), Bint(47), Bint(53), Bint(59), Bint(61), Bint(67), Bint(71), Bint(73), Bint(79), Bint(83), Bint(89), Bint(97)};
 
 // 乘方
@@ -59,10 +60,10 @@ Bint randomBigNum(int len)
 // Miller-Rabin 素性验证
 bool isBigPrime(Bint a)
 {
-    if (a == Bint(0) || a == Bint(1))
+    if (a.isEven())
         return false;
-    if (a == Bint(2))
-        return true;
+    if (a.isMultipleOfFive())
+        return false;
 
     Bint a_1 = a - Bint(1);
     Bint _2_s = Bint(1);
@@ -104,12 +105,31 @@ bool isBigPrime(Bint a)
 Bint randomBigPrime(int len)
 {
 
-    Bint ans(0);
+    Bint ans;
 
     while (true)
     {
-        ans = randomBigNum(len);
+        ans = randomBigNum(len - 1);
+        ans.digits.push_back(primeEnd[randomNum(0, 4)]);
         if (isBigPrime(ans))
             return ans;
     }
+}
+
+// 扩展 Euclidean
+Bint extendedEuclidean(Bint a, Bint b, Bint &x, Bint &y) {
+
+    if (b == Bint(0)) {
+        x = Bint(1);
+        y = Bint(0);
+        return a;
+    }
+
+    Bint x1, y1;
+    Bint gcd = extendedEuclidean(b, a % b, x1, y1);
+
+    x = y1;
+    y = x1 + (a / b) * y1;
+
+    return gcd;
 }
