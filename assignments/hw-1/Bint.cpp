@@ -4,7 +4,7 @@
 
 void Bint::_remove_front_zeros()
 {
-    while (this->digits.size() > 0 && this->digits[0] == 0)
+    while (this->digits.size() > 1 && this->digits[0] == 0)
         this->digits.erase(this->digits.begin());
 }
 
@@ -253,7 +253,7 @@ Bint Bint::operator-(const Bint &other) const
             tot1--;
             tot2--;
         }
-        while (ans.size() > 0 && ans[0] == 0)
+        while (ans.size() > 1 && ans[0] == 0)
             ans.erase(ans.begin());
         return Bint(ans);
     }
@@ -310,7 +310,7 @@ Bint Bint::operator/(const Bint &other) const
         current_dividend._remove_front_zeros();
     }
 
-    while (result.size() > 0 && result[0] == 0)
+    while (result.size() > 1 && result[0] == 0)
         result.erase(result.begin());
 
     return Bint(result);
