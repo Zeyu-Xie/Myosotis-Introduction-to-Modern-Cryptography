@@ -11,16 +11,19 @@ Bint p, q;
 
 int main()
 {
+
     int cnt = 25;
 
-    for (int i = 100; i <= 1000; i++)
+    for (int i = 100; i <= 10000; i++)
     {
-        if (isBigPrime(i))
+        if (isBigPrime(Bint(i)))
         {
-            cout << i << "\n";
-            cnt ++;
+            // cout << i << "\n";
+            cnt++;
         }
     }
-    cout<<"\n"<<cnt;
+
+    cout << "Total: " << cnt;
+
     return 0;
 }

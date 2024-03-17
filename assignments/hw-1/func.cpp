@@ -23,16 +23,17 @@ Bint powMod(Bint a, Bint b, Bint c)
 {
     if (b == Bint(0))
         return Bint(1);
-    a = a % c;
+    if (a > c)
+        a = a % c;
     if (b % Bint(2) == 0)
     {
-        Bint tmp = pow(a, b / Bint(2)) % c;
+        Bint tmp = powMod(a, b / Bint(2), c);
         return (tmp * tmp) % c;
     }
     else
     {
-        Bint tmp = pow(a, b / Bint(2)) % c;
-        return (((tmp * tmp) % c) * a) % c;
+        Bint tmp = powMod(a, b / Bint(2), c);
+        return (tmp * tmp * a) % c;
     }
 }
 
@@ -58,7 +59,6 @@ Bint randomBigNum(int len)
 // Miller-Rabin 素性验证
 bool isBigPrime(Bint a)
 {
-
     if (a == Bint(0) || a == Bint(1))
         return false;
     if (a == Bint(2))
@@ -76,8 +76,11 @@ bool isBigPrime(Bint a)
         d = d / Bint(2);
     }
 
-    for (int i = 0; i < 2; i++)
+    Bint d0 = d;
+
+    for (int i = 0; i < 13; i++)
     {
+        d = d0;
         bool flag = true;
         if (powMod(smallPrimeList[i], d, a) == Bint(1))
             continue;
@@ -88,7 +91,7 @@ bool isBigPrime(Bint a)
                 flag = false;
                 break;
             }
-            d = d+ d;
+            d = d + d;
         }
         if (flag == true)
             return false;
