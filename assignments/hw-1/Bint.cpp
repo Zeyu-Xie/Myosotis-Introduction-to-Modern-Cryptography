@@ -1,8 +1,58 @@
 #include "Bint.hpp"
 
-Bint::Bint() : digits({0}) {}
+// Private
+
+void Bint::_remove_front_zeros()
+{
+    while (this->digits.size() > 0 && this->digits[0] == 0)
+        this->digits.erase(this->digits.begin());
+}
+
+std::vector<int> Bint::_get_digits() {
+    return this->digits;
+}
+
+int Bint::_get_length() {
+    return this->digits.size();
+}
+
+Bint Bint::_simpleTimes(int a)
+{
+    int length = digits.size();
+    std::vector<int> ans(length);
+    int tot = length - 1;
+    int t = 0;
+    while (tot >= 0)
+    {
+        int b = (tot >= 0) ? digits[tot] : 0;
+        ans[tot] = b * a + t;
+        if (ans[tot] >= 10)
+        {
+            t = ans[tot] / 10;
+            ans[tot] %= 10;
+        }
+        else
+            t = 0;
+        tot--;
+    }
+    if (t > 0)
+        ans.insert(ans.begin(), t);
+    return Bint(ans);
+}
+
+// Public
+
+Bint::Bint() : digits(std::vector<int>({0})) {}
 
 Bint::Bint(std::vector<int> digits) : digits(digits) {}
+
+Bint::Bint(int num)
+{
+    std::string s = std::to_string(num);
+    digits = {};
+    for (int i = 0; i < s.length(); i++)
+        digits.push_back(s[i] - '0');
+}
 
 Bint::Bint(const Bint &other)
 {
@@ -176,7 +226,7 @@ Bint Bint::operator+(const Bint &other) const
 Bint Bint::operator-(const Bint &other) const
 {
     if (*this <= other)
-        return Bint({0});
+        return Bint();
     else
     {
         int length = digits.size();
@@ -207,35 +257,11 @@ Bint Bint::operator-(const Bint &other) const
     }
 }
 
-Bint Bint::_simpleTimes(int a)
-{
-    int length = digits.size();
-    std::vector<int> ans(length);
-    int tot = length - 1;
-    int t = 0;
-    while (tot >= 0)
-    {
-        int b = (tot >= 0) ? digits[tot] : 0;
-        ans[tot] = b * a + t;
-        if (ans[tot] >= 10)
-        {
-            t = ans[tot] / 10;
-            ans[tot] %= 10;
-        }
-        else
-            t = 0;
-        tot--;
-    }
-    if (t > 0)
-        ans.insert(ans.begin(), t);
-    return Bint(ans);
-}
-
 // a*b，a 和 b 的大小不设限
 Bint Bint::operator*(const Bint &other) const
 {
-    if (*this == Bint({0}) || other == Bint({0}))
-        return Bint({0});
+    if (*this == Bint() || other == Bint())
+        return Bint();
     int length = std::max(digits.size(), other.digits.size());
     int length1 = digits.size();
     int length2 = other.digits.size();
@@ -247,7 +273,7 @@ Bint Bint::operator*(const Bint &other) const
         for (int k = 1; k <= length2 - j - 1; k++)
             tmp[j].digits.push_back(0);
     }
-    Bint ans({0});
+    Bint ans;
     for (int j = 0; j < length2; j++)
         ans = ans + tmp[j];
     return ans;
@@ -257,30 +283,29 @@ Bint Bint::operator*(const Bint &other) const
 Bint Bint::operator/(const Bint &other) const
 {
     if (*this < other)
-        return Bint({0});
+        return Bint();
 
     if (*this == other)
-        return Bint({1});
+        return Bint(1);
 
     std::vector<int> result = digits;
 
     for (int i = 0; i < result.size(); i++)
         result[i] = 0;
 
-    Bint current_dividend({0});
+    Bint current_dividend;
 
     for (int i = 0; i < digits.size(); i++)
     {
         int factor = 0;
-        current_dividend = current_dividend * Bint({1, 0}) + Bint({digits[i]});
-        while (current_dividend >= other * (Bint({factor + 1})))
+        current_dividend = current_dividend * Bint({1, 0}) + Bint(digits[i]);
+        while (current_dividend >= other * (Bint(factor+1)))
             factor++;
 
         result[i] = factor;
 
-        current_dividend = current_dividend - other * (Bint({factor}));
-        while (current_dividend.digits.size() > 0 && current_dividend.digits[0] == 0)
-            current_dividend.digits.erase(current_dividend.digits.begin());
+        current_dividend = current_dividend - other * (Bint(factor));
+       current_dividend._remove_front_zeros();
     }
 
     while (result.size() > 0 && result[0] == 0)

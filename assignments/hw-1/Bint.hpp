@@ -14,8 +14,17 @@ class Bint
     friend std::istream &operator>>(std::istream &is, Bint &bint);
     friend std::ostream &operator<<(std::ostream &os, const Bint &bint);
 
+private:
+    std::vector<int> digits;
+
+    void _remove_front_zeros();
+    std::vector<int> _get_digits();
+    int _get_length();
+    Bint _simpleTimes(int a);
+
 public:
     Bint();
+    Bint(int num);
     Bint(std::vector<int> digits);
     Bint(const Bint &other);
 
@@ -31,9 +40,4 @@ public:
     Bint operator*(const Bint &other) const;
     Bint operator/(const Bint &other) const;
     Bint operator%(const Bint &other) const;
-
-// private:
-    std::vector<int> digits;
-
-    Bint _simpleTimes(int a);
 };
