@@ -6,7 +6,7 @@ main: Bint.cpp main.cpp
 	g++ Bint.cpp main.cpp -o main --std=c++11
 
 clean:
-	rm -f main
+	rm -f main main.exe
 
 clean_win:
 	del main.exe

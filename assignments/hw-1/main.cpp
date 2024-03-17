@@ -27,6 +27,7 @@ int main()
             cout << p << ">=" << q << "\n";
         cout << p << "+" << q << "=" << p + q << "\n";
         cout << p << "-" << q << "=" << p - q << "\n";
+        cout << p << "*" << q << "=" << p * q << "\n";
     }
 
     return 0;

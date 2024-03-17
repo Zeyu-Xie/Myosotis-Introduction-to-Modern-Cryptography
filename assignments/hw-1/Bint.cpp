@@ -207,4 +207,48 @@ Bint Bint::operator-(const Bint &other) const
     }
 }
 
-// a*b
+Bint Bint::_simpleTimes(int a)
+{
+    int length = digits.size();
+    std::vector<int> ans(length);
+    int tot = length - 1;
+    int t = 0;
+    while (tot >= 0)
+    {
+        int b = (tot >= 0) ? digits[tot] : 0;
+        ans[tot] = b * a + t;
+        if (ans[tot] >= 10)
+        {
+            t = ans[tot] / 10;
+            ans[tot] %= 10;
+        }
+        else
+            t = 0;
+        tot--;
+    }
+    if (t > 0)
+        ans.insert(ans.begin(), t);
+    return Bint(ans);
+}
+
+// a*b，a 和 b 的大小不设限
+Bint Bint::operator*(const Bint &other) const
+{
+    if (*this == Bint({0}) || other == Bint({0}))
+        return Bint({0});
+    int length = std::max(digits.size(), other.digits.size());
+    int length1 = digits.size();
+    int length2 = other.digits.size();
+    std::vector<Bint> tmp(length2);
+    for (int j = 0; j < length2; j++)
+    {
+        Bint x = (*this);
+        tmp[j] = x._simpleTimes(other.digits[j]);
+        for (int k = 1; k <= length2 - j - 1; k++)
+            tmp[j].digits.push_back(0);
+    }
+    Bint ans({0});
+    for (int j = 0; j < length2; j++)
+        ans = ans + tmp[j];
+    return ans;
+}

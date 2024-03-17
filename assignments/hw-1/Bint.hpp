@@ -32,6 +32,8 @@ public:
     Bint operator/(const Bint &other) const;
     Bint operator%(const Bint &other) const;
 
-private:
+// private:
     std::vector<int> digits;
+
+    Bint _simpleTimes(int a);
 };
