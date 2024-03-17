@@ -56,24 +56,45 @@ Bint randomBigNum(int len)
 }
 
 // Miller-Rabin 素性验证
-bool isBigPrime(Bint a, int accuracy)
+bool isBigPrime(Bint a)
 {
 
     if (a == Bint(0) || a == Bint(1))
         return false;
     if (a == Bint(2))
         return true;
-    for (int i = 0; i < 25; i++)
+
+    Bint a_1 = a - Bint(1);
+    Bint _2_s = Bint(1);
+    int s = 0;
+    Bint d = a_1;
+
+    while (d.isEven())
     {
-        if (a % smallPrimeList[i] == Bint(0))
+        _2_s = _2_s + _2_s;
+        s += 1;
+        d = d / Bint(2);
+    }
+
+    for (int i = 0; i < 2; i++)
+    {
+        bool flag = true;
+        if (powMod(smallPrimeList[i], d, a) == Bint(1))
+            continue;
+        for (int r = 0; r < s; r++)
+        {
+            if (powMod(smallPrimeList[i], d, a) == a_1)
+            {
+                flag = false;
+                break;
+            }
+            d = d+ d;
+        }
+        if (flag == true)
             return false;
     }
 
     return true;
-}
-bool isBigPrime(Bint a)
-{
-    return isBigPrime(a, 20);
 }
 
 // 随机素数

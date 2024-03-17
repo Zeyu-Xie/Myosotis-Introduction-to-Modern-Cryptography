@@ -11,13 +11,16 @@ Bint p, q;
 
 int main()
 {
+    int cnt = 25;
 
-    int cnt = 0;
-    for(int i=100;i<=120;i++) {
-        Bint t(i);
-        cout<<t.isOdd()<<t.isEven()<<t.isMultipleOfFive()<<"\n";
+    for (int i = 100; i <= 1000; i++)
+    {
+        if (isBigPrime(i))
+        {
+            cout << i << "\n";
+            cnt ++;
+        }
     }
-    cout << cnt;
-
+    cout<<"\n"<<cnt;
     return 0;
 }
