@@ -207,4 +207,4 @@ Bint Bint::operator-(const Bint &other) const
     }
 }
 
-//
+// a*b
