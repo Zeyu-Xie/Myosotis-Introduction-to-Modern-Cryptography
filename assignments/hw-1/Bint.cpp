@@ -8,11 +8,13 @@ void Bint::_remove_front_zeros()
         this->digits.erase(this->digits.begin());
 }
 
-std::vector<int> Bint::_get_digits() {
+std::vector<int> Bint::_get_digits()
+{
     return this->digits;
 }
 
-int Bint::_get_length() {
+int Bint::_get_length()
+{
     return this->digits.size();
 }
 
@@ -299,13 +301,13 @@ Bint Bint::operator/(const Bint &other) const
     {
         int factor = 0;
         current_dividend = current_dividend * Bint({1, 0}) + Bint(digits[i]);
-        while (current_dividend >= other * (Bint(factor+1)))
+        while (current_dividend >= other * (Bint(factor + 1)))
             factor++;
 
         result[i] = factor;
 
         current_dividend = current_dividend - other * (Bint(factor));
-       current_dividend._remove_front_zeros();
+        current_dividend._remove_front_zeros();
     }
 
     while (result.size() > 0 && result[0] == 0)

@@ -11,5 +11,6 @@ test: Bint.cpp test.cpp
 clean:
 	rm -f main main.exe test test.exe
 
-# clean_win:
-# 	del main.exe
+# clean command for windows powershell
+clean_win:
+	del main main.exe test test.exe
