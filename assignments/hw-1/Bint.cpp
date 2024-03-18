@@ -5,39 +5,13 @@ std::istream &operator>>(std::istream &is, Bint &bint)
 {
     std::string input;
     is >> input;
-    bint.digits.clear();
-    bool flag = false;
-    for (char c : input)
-    {
-        if (std::isdigit(c))
-        {
-            if (flag)
-            {
-                bint.digits.push_back(c - '0');
-            }
-            else
-            {
-                if (c == '0')
-                    continue;
-                else
-                {
-                    bint.digits.push_back(c - '0');
-                    flag = true;
-                }
-            }
-        }
-        else
-        {
-            bint = Bint();
-            return is;
-        }
-    }
-    if (bint.digits.size() <= 0)
-        bint.digits.push_back(0);
+    bint = Bint(input);
     return is;
 }
 std::ostream &operator<<(std::ostream &os, const Bint &bint)
 {
+    if (bint.positive == -1)
+        os << "-";
     for (int i = 0; i < bint.digits.size(); i++)
         os << bint.digits[i];
     return os;
@@ -79,24 +53,57 @@ Bint Bint::_simpleTimes(int a)
 // Public
 
 // 默认构造为 0
-Bint::Bint() : positive(true), digits(std::vector<int>({0})) {}
+Bint::Bint() : positive(0), digits(std::vector<int>({0})) {}
 // 从 int 构造
-Bint::Bint(int num) : positive(true)
+Bint::Bint(int num)
 {
-    std::string s = std::to_string(num);
-    digits = {};
-    for (int i = 0; i < s.length(); i++)
-        digits.push_back(s[i] - '0');
+    if (num == 0)
+    {
+        positive = 0;
+        digits = std::vector<int>({0});
+    }
+    else if (num < 0)
+    {
+        positive = -1;
+        num = -num;
+        std::string s = std::to_string(num);
+        digits = {};
+        for (int i = 0; i < s.length(); i++)
+            digits.push_back(s[i] - '0');
+    }
+    else
+    {
+        positive = 1;
+        std::string s = std::to_string(num);
+        digits = {};
+        for (int i = 0; i < s.length(); i++)
+            digits.push_back(s[i] - '0');
+    }
 }
 // 从 std::string 构造
-Bint::Bint(std::string s) : positive(true)
+Bint::Bint(std::string s)
 {
+    std::string s1 = (s[0] == '-') ? s.substr(1) : s;
+
     digits = {};
-    for (int i = 0; i < s.length(); i++)
-        digits.push_back(s[i] - '0');
+    for (int i = 0; i < s1.length(); i++)
+        digits.push_back(s1[i] - '0');
+    this->_remove_front_zeros();
+
+    if (digits[0] == 0)
+        positive = 0;
+    else if (s[0] == '-')
+        positive = -1;
+    else
+        positive = 1;
 }
 // 从 std::vector<int> 构造
-Bint::Bint(std::vector<int> digits) : positive(true), digits(digits) {}
+Bint::Bint(std::vector<int> digits) : positive(1), digits(digits)
+{
+    this->_remove_front_zeros();
+    if (digits[0] == 0)
+        positive = 0;
+}
 
 // 复制构造
 Bint::Bint(const Bint &other)

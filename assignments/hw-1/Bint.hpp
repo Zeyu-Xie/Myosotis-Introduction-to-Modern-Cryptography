@@ -22,7 +22,7 @@ private:
 
 public:
     // 全部数位
-    bool positive;
+    int positive;
     std::vector<int> digits;
 
     // 默认构造为 0
