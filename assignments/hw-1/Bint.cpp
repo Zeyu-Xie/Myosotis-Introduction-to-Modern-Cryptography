@@ -238,20 +238,19 @@ bool Bint::operator>=(const Bint &other) const
     return true;
 }
 
-// 重载加、减、乘、整除、求余运算符
-Bint Bint::operator+(const Bint &other) const
+Bint _absAdd(Bint a, Bint b)
 {
-    int length = std::max(digits.size(), other.digits.size());
+    int length = std::max(a.digits.size(), b.digits.size());
     std::vector<int> ans(length);
     int tot = length - 1;
-    int tot1 = digits.size() - 1;
-    int tot2 = other.digits.size() - 1;
+    int tot1 = a.digits.size() - 1;
+    int tot2 = b.digits.size() - 1;
     int t = 0;
     while (tot >= 0)
     {
-        int a = (tot1 >= 0) ? digits[tot1] : 0;
-        int b = (tot2 >= 0) ? other.digits[tot2] : 0;
-        ans[tot] = a + b + t;
+        int x = (tot1 >= 0) ? a.digits[tot1] : 0;
+        int y = (tot2 >= 0) ? b.digits[tot2] : 0;
+        ans[tot] = x + y + t;
         if (ans[tot] >= 10)
         {
             ans[tot] -= 10;
@@ -267,38 +266,78 @@ Bint Bint::operator+(const Bint &other) const
         ans.insert(ans.begin(), 1);
     return Bint(ans);
 }
-Bint Bint::operator-(const Bint &other) const
+Bint _absMinus(Bint c, Bint d)
 {
-    if (*this <= other)
-        return Bint();
+    Bint a = c.abs();
+    Bint b = d.abs();
+    if (a == b)
+        return Bint(0);
+    if (a < b)
+    {
+        Bint t = a;
+        a = b;
+        b = t;
+    }
+    int length = a.digits.size();
+    std::vector<int> ans(length);
+    int tot = length - 1;
+    int tot1 = a.digits.size() - 1;
+    int tot2 = b.digits.size() - 1;
+    int t = 0;
+    while (tot >= 0)
+    {
+        int x = (tot1 >= 0) ? a.digits[tot1] : 0;
+        int y = (tot2 >= 0) ? b.digits[tot2] : 0;
+        ans[tot] = x - y - t;
+        if (ans[tot] < 0)
+        {
+            ans[tot] += 10;
+            t = 1;
+        }
+        else
+            t = 0;
+        tot--;
+        tot1--;
+        tot2--;
+    }
+    while (ans.size() > 1 && ans[0] == 0)
+        ans.erase(ans.begin());
+    return Bint(ans);
+}
+
+// 重载加、减、乘、整除、求余运算符
+Bint Bint::operator+(const Bint &other) const
+{
+    if (positive == other.positive)
+    {
+        Bint ans = _absAdd(*this, other);
+        ans.positive = positive;
+        return ans;
+    }
+    else if (positive == 0)
+        return other;
+    else if (other.positive == 0)
+        return *this;
     else
     {
-        int length = digits.size();
-        std::vector<int> ans(length);
-        int tot = length - 1;
-        int tot1 = digits.size() - 1;
-        int tot2 = other.digits.size() - 1;
-        int t = 0;
-        while (tot >= 0)
+        Bint a = abs();
+        Bint b = other.abs();
+        Bint ans = _absMinus(a, b);
+        if (ans == Bint(0))
+            ans.positive = 0;
+        else
         {
-            int a = (tot1 >= 0) ? digits[tot1] : 0;
-            int b = (tot2 >= 0) ? other.digits[tot2] : 0;
-            ans[tot] = a - b - t;
-            if (ans[tot] < 0)
-            {
-                ans[tot] += 10;
-                t = 1;
-            }
+            if (a < b)
+                ans.positive = other.positive;
             else
-                t = 0;
-            tot--;
-            tot1--;
-            tot2--;
+                ans.positive = positive;
         }
-        while (ans.size() > 1 && ans[0] == 0)
-            ans.erase(ans.begin());
-        return Bint(ans);
+        return ans;
     }
+}
+Bint Bint::operator-(const Bint &other) const
+{
+    return (*this) + (other.opposite());
 }
 Bint Bint::operator*(const Bint &other) const
 {
@@ -318,40 +357,50 @@ Bint Bint::operator*(const Bint &other) const
     Bint ans;
     for (int j = 0; j < length2; j++)
         ans = ans + tmp[j];
+    ans.positive = positive * other.positive;
     return ans;
 }
 Bint Bint::operator/(const Bint &other) const
 {
-    if (*this < other)
+    if (other.positive <= 0)
         return Bint();
 
-    if (*this == other)
-        return Bint(1);
-
-    std::vector<int> result = digits;
-
-    for (int i = 0; i < result.size(); i++)
-        result[i] = 0;
-
-    Bint current_dividend;
-
-    for (int i = 0; i < digits.size(); i++)
+    if (positive >= 0)
     {
-        int factor = 0;
-        current_dividend = current_dividend * Bint("10") + Bint(digits[i]);
-        while (current_dividend >= other * (Bint(factor + 1)))
-            factor++;
+        if (*this < other)
+            return Bint();
 
-        result[i] = factor;
+        if (*this == other)
+            return Bint(1);
 
-        current_dividend = current_dividend - other * (Bint(factor));
-        current_dividend._remove_front_zeros();
+        std::vector<int> result = digits;
+
+        for (int i = 0; i < result.size(); i++)
+            result[i] = 0;
+
+        Bint current_dividend;
+
+        for (int i = 0; i < digits.size(); i++)
+        {
+            int factor = 0;
+            current_dividend = current_dividend * Bint("10") + Bint(digits[i]);
+            while (current_dividend >= other * (Bint(factor + 1)))
+                factor++;
+
+            result[i] = factor;
+
+            current_dividend = current_dividend - other * (Bint(factor));
+            current_dividend._remove_front_zeros();
+        }
+
+        while (result.size() > 1 && result[0] == 0)
+            result.erase(result.begin());
+
+        return Bint(result);
     }
-
-    while (result.size() > 1 && result[0] == 0)
-        result.erase(result.begin());
-
-    return Bint(result);
+    else {
+        return ((opposite()-Bint(1))/other+Bint(1)).opposite();
+    }
 }
 Bint Bint::operator%(const Bint &other) const
 {
@@ -359,12 +408,12 @@ Bint Bint::operator%(const Bint &other) const
 }
 
 // 绝对值
-Bint Bint::abs()
+Bint Bint::abs() const
 {
     return Bint(this->digits);
 }
 // 相反数
-Bint Bint::opposite()
+Bint Bint::opposite() const
 {
     Bint ans = *this;
     ans.positive *= (-1);
@@ -372,32 +421,32 @@ Bint Bint::opposite()
 }
 
 // 获取末位
-int Bint::end()
+int Bint::end() const
 {
     return *(digits.end() - 1);
 }
 // 获取长度
-int Bint::length()
+int Bint::length() const
 {
     return digits.size();
 }
 
 // 是否是奇数
-bool Bint::isOdd()
+bool Bint::isOdd() const
 {
     if (this->end() % 2 == 0)
         return false;
     return true;
 }
 // 是否是偶数
-bool Bint::isEven()
+bool Bint::isEven() const
 {
     if (this->end() % 2 == 0)
         return true;
     return false;
 }
 // 是否是 5 的倍数
-bool Bint::isMultipleOfFive()
+bool Bint::isMultipleOfFive() const
 {
     if (this->end() % 5 == 0)
         return true;

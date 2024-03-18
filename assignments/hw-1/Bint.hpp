@@ -53,19 +53,19 @@ public:
     Bint operator%(const Bint &other) const;
 
     // 绝对值
-    Bint abs();
+    Bint abs() const;
     // 相反数
-    Bint opposite();
+    Bint opposite() const;
 
     // 获取末位
-    int end();
+    int end() const;
     // 获取长度
-    int length();
+    int length() const;
 
     // 是否是奇数
-    bool isOdd();
+    bool isOdd() const;
     // 是否是偶数
-    bool isEven();
+    bool isEven() const;
     // 是否是 5 的倍数
-    bool isMultipleOfFive();
+    bool isMultipleOfFive() const;
 };

@@ -12,22 +12,10 @@ int main()
     Bint a, b;
     while (1)
     {
-        a = Bint(randomNum(-4, 4));
-        b = Bint(randomNum(-4, 4));
-        cout<<a<<" "<<b<<"\n";
-        if (a == b)
-            cout << "==  ";
-        if (a != b)
-            cout << "!=  ";
-        if (a < b)
-            cout << "<  ";
-        if (a > b)
-            cout << ">  ";
-        if (a <= b)
-            cout << "<=  ";
-        if (a >= b)
-            cout << ">=  ";
-        cout << "\n";
+        a = Bint(randomNum(-100, 100));
+        b = Bint(randomNum(0, 10));
+        cout << a << " " << b << "\n";
+        cout << a / b << " " << a % b << "\n\n";
         getchar();
     }
 }
