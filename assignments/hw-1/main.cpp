@@ -17,15 +17,17 @@ Bint plaintext, encryptedText, decryptedText;
 int main()
 {
 
+    std::ios::sync_with_stdio(false);
+
     auto start = std::chrono::steady_clock::now();
 
     while (1)
     {
         while (1)
         {
-            p = randomBigPrime(7);
-            q = randomBigPrime(7);
-            plaintext = randomBigNum(6);
+            p = randomBigPrime(15);
+            q = randomBigPrime(15);
+            plaintext = randomBigNum(14);
             n = p * q;
             phi_n = (p - Bint(1)) * (q - Bint(1));
             if (phi_n % e <= Bint(0))
@@ -55,7 +57,7 @@ int main()
         cout << "Decrypted Text: " << decryptedText << "\n";
 
         auto end = std::chrono::steady_clock::now();
-        auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(end - start);        
+        auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(end - start);
         start = end;
         cout << "Time: " << duration.count() << " ms\n";
         cout << "----------\n";
