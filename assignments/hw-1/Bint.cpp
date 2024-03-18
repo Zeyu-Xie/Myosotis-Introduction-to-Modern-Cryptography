@@ -98,7 +98,7 @@ Bint::Bint(std::string s)
         positive = 1;
 }
 // 从 std::vector<int> 构造
-Bint::Bint(std::vector<int> digits) : positive(1), digits(digits)
+Bint::Bint(std::vector<int> dig) : positive(1), digits(dig)
 {
     this->_remove_front_zeros();
     if (digits[0] == 0)
