@@ -54,6 +54,8 @@ public:
 
     // 绝对值
     Bint abs();
+    // 相反数
+    Bint opposite();
 
     // 获取末位
     int end();

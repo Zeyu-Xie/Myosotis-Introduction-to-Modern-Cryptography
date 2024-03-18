@@ -115,8 +115,9 @@ Bint::Bint(const Bint &other)
 // 重载比较运算符
 bool Bint::operator==(const Bint &other) const
 {
-    if (this->positive != other.positive)
+    if (positive != other.positive)
         return false;
+
     int length = digits.size();
     if (length != other.digits.size())
         return false;
@@ -134,59 +135,94 @@ bool Bint::operator==(const Bint &other) const
 }
 bool Bint::operator!=(const Bint &other) const
 {
-    if (this->positive != other.positive)
-        return true;
-    int length = digits.size();
-    if (length != other.digits.size())
-        return true;
-
-    for (int i = 0; i < length; i++)
-    {
-        bool tmp = (digits[i] == other.digits[i]);
-        if (tmp)
-            continue;
-        else
-            return true;
-    }
-
-    return false;
+    return !((*this) == other);
 }
 bool Bint::operator<(const Bint &other) const
 {
-    int length = digits.size();
-
-    if (length > other.digits.size())
-        return false;
-    else if (length < other.digits.size())
+    if (positive < other.positive)
         return true;
+    if (positive > other.positive)
+        return false;
+
+    if (positive == 0)
+        return false;
+    if (positive == 1)
+    {
+        int length = digits.size();
+        if (length > other.digits.size())
+            return false;
+        else if (length < other.digits.size())
+            return true;
+        else
+        {
+            for (int i = 0; i < length; i++)
+                if (digits[i] < other.digits[i])
+                    return true;
+                else if (digits[i] > other.digits[i])
+                    return false;
+            return false;
+        }
+    }
     else
     {
-        for (int i = 0; i < length; i++)
-            if (digits[i] < other.digits[i])
-                return true;
-            else if (digits[i] > other.digits[i])
-                return false;
-        return false;
+        int length = digits.size();
+        if (length > other.digits.size())
+            return true;
+        else if (length < other.digits.size())
+            return false;
+        else
+        {
+            for (int i = 0; i < length; i++)
+                if (digits[i] < other.digits[i])
+                    return false;
+                else if (digits[i] > other.digits[i])
+                    return true;
+            return false;
+        }
     }
 }
 bool Bint::operator>(const Bint &other) const
 {
-    int length = digits.size();
-
-    if (length > other.digits.size())
-        return true;
-    else if (length < other.digits.size())
+    if (positive < other.positive)
         return false;
+    if (positive > other.positive)
+        return true;
+
+    if (positive == 0)
+        return false;
+    if (positive == 1)
+    {
+        int length = digits.size();
+        if (length > other.digits.size())
+            return true;
+        else if (length < other.digits.size())
+            return false;
+        else
+        {
+            for (int i = 0; i < length; i++)
+                if (digits[i] < other.digits[i])
+                    return false;
+                else if (digits[i] > other.digits[i])
+                    return true;
+            return false;
+        }
+    }
     else
     {
-        for (int i = 0; i < length; i++)
+        int length = digits.size();
+        if (length > other.digits.size())
+            return false;
+        else if (length < other.digits.size())
+            return true;
+        else
         {
-            if (digits[i] > other.digits[i])
-                return true;
-            else if (digits[i] < other.digits[i])
-                return false;
+            for (int i = 0; i < length; i++)
+                if (digits[i] < other.digits[i])
+                    return true;
+                else if (digits[i] > other.digits[i])
+                    return false;
+            return false;
         }
-        return false;
     }
 }
 bool Bint::operator<=(const Bint &other) const
@@ -326,6 +362,13 @@ Bint Bint::operator%(const Bint &other) const
 Bint Bint::abs()
 {
     return Bint(this->digits);
+}
+// 相反数
+Bint Bint::opposite()
+{
+    Bint ans = *this;
+    ans.positive *= (-1);
+    return ans;
 }
 
 // 获取末位
