@@ -22,7 +22,6 @@ Bint plaintext, encryptedText, decryptedText;
 
 int main()
 {
-
     std::ios::sync_with_stdio(false);
 
     auto start = std::chrono::steady_clock::now();
@@ -31,9 +30,9 @@ int main()
     {
         while (1)
         {
-            p = randomBigPrime(15);
-            q = randomBigPrime(15);
-            plaintext = randomBigNum(14);
+            p = randomBigPrime(24);
+            q = randomBigPrime(24);
+            plaintext = randomBigNum(23);
             n = p * q;
             phi_n = (p - Bint(1)) * (q - Bint(1));
             if (phi_n % e <= Bint(0))

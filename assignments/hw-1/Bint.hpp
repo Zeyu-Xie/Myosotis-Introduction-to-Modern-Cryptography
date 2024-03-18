@@ -16,9 +16,9 @@ class Bint
 
 private:
     // 去除前面多余的 0
-    void _remove_front_zeros();
+    inline void _remove_front_zeros();
     // 与 int 类型 0~9 相乘
-    Bint _simpleTimes(int a);
+    inline Bint _simpleTimes(int a);
 
 public:
     // 全部数位
@@ -52,15 +52,18 @@ public:
     Bint operator/(const Bint &other) const;
     Bint operator%(const Bint &other) const;
 
+    // 数位之和
+    int sum() const;
+
     // 绝对值
-    Bint abs() const;
+    inline Bint abs() const;
     // 相反数
-    Bint opposite() const;
+    inline Bint opposite() const;
 
     // 获取末位
-    int end() const;
+    inline int end() const;
     // 获取长度
-    int length() const;
+    inline int length() const;
 
     // 是否是奇数
     bool isOdd() const;
@@ -68,4 +71,9 @@ public:
     bool isEven() const;
     // 是否是 5 的倍数
     bool isMultipleOfFive() const;
+
+    // 是否是 0
+    inline bool isZero() const;
+    // 是否是 1
+    inline bool isOne() const;
 };

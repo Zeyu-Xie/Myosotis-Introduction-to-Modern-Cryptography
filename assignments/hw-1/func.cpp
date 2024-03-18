@@ -51,7 +51,7 @@ Bint randomBigNum(int len)
 {
     std::vector<int> digits(len);
     digits[0] = randomNum(1, 10);
-    for (int i = 1; i < len; i++)
+    for (int i = 1; i < len; ++i)
         digits[i] = randomNum(0, 10);
     while (digits.size() > 1 && digits[0] == 0)
         digits.erase(digits.begin());
@@ -61,11 +61,15 @@ Bint randomBigNum(int len)
 // Miller-Rabin 素性验证
 inline bool isBigPrime(Bint a)
 {
+    std::cout<<a<<"\n";
+
     if (a <= Bint(1))
         return false;
     if (a.isEven())
         return false;
     if (a.isMultipleOfFive())
+        return false;
+    if (a.sum() % 3 == 0)
         return false;
 
     Bint a_1 = a - Bint(1);
@@ -82,7 +86,7 @@ inline bool isBigPrime(Bint a)
 
     Bint d0 = d;
 
-    for (int i = 0; i < 13; i++)
+    for (int i = 0; i < 13; ++i)
     {
 
         if (smallPrimeList[i] >= a)
@@ -90,16 +94,18 @@ inline bool isBigPrime(Bint a)
 
         d = d0;
         bool flag = true;
-        if (powMod(smallPrimeList[i], d, a) == Bint(1))
+        Bint pm = powMod(smallPrimeList[i], d, a);
+        if (pm == Bint(1))
             continue;
-        for (int r = 0; r < s; r++)
+        for (int r = 0; r < s; ++r)
         {
-            if (powMod(smallPrimeList[i], d, a) == a_1)
+            if (pm == a_1)
             {
                 flag = false;
                 break;
             }
             d = d + d;
+            pm = pm * pm % a;
         }
         if (flag == true)
             return false;

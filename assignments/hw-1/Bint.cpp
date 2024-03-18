@@ -20,13 +20,13 @@ std::ostream &operator<<(std::ostream &os, const Bint &bint)
 // Private
 
 // 去除前面多余的 0
-void Bint::_remove_front_zeros()
+inline void Bint::_remove_front_zeros()
 {
-    while (this->digits.size() > 1 && this->digits[0] == 0)
-        this->digits.erase(this->digits.begin());
+    while (digits[0] == 0 && digits.size() > 1)
+        digits.erase(digits.begin());
 }
 // 与 int 类型 0~9 相乘
-Bint Bint::_simpleTimes(int a)
+inline Bint Bint::_simpleTimes(int a)
 {
     int length = digits.size();
     std::vector<int> ans(length);
@@ -68,7 +68,7 @@ Bint::Bint(int num)
         num = -num;
         std::string s = std::to_string(num);
         digits = {};
-        for (int i = 0; i < s.length(); i++)
+        for (int i = 0; i < s.length(); ++i)
             digits.push_back(s[i] - '0');
     }
     else
@@ -76,7 +76,7 @@ Bint::Bint(int num)
         positive = 1;
         std::string s = std::to_string(num);
         digits = {};
-        for (int i = 0; i < s.length(); i++)
+        for (int i = 0; i < s.length(); ++i)
             digits.push_back(s[i] - '0');
     }
 }
@@ -86,9 +86,9 @@ Bint::Bint(std::string s)
     std::string s1 = (s[0] == '-') ? s.substr(1) : s;
 
     digits = {};
-    for (int i = 0; i < s1.length(); i++)
+    for (int i = 0; i < s1.length(); ++i)
         digits.push_back(s1[i] - '0');
-    this->_remove_front_zeros();
+    _remove_front_zeros();
 
     if (digits[0] == 0)
         positive = 0;
@@ -100,7 +100,7 @@ Bint::Bint(std::string s)
 // 从 std::vector<int> 构造
 Bint::Bint(std::vector<int> dig) : positive(1), digits(dig)
 {
-    this->_remove_front_zeros();
+    _remove_front_zeros();
     if (digits[0] == 0)
         positive = 0;
 }
@@ -122,7 +122,7 @@ bool Bint::operator==(const Bint &other) const
     if (length != other.digits.size())
         return false;
 
-    for (int i = 0; i < length; i++)
+    for (int i = 0; i < length; ++i)
     {
         bool tmp = (digits[i] == other.digits[i]);
         if (tmp)
@@ -155,7 +155,7 @@ bool Bint::operator<(const Bint &other) const
             return true;
         else
         {
-            for (int i = 0; i < length; i++)
+            for (int i = 0; i < length; ++i)
                 if (digits[i] < other.digits[i])
                     return true;
                 else if (digits[i] > other.digits[i])
@@ -172,7 +172,7 @@ bool Bint::operator<(const Bint &other) const
             return false;
         else
         {
-            for (int i = 0; i < length; i++)
+            for (int i = 0; i < length; ++i)
                 if (digits[i] < other.digits[i])
                     return false;
                 else if (digits[i] > other.digits[i])
@@ -199,7 +199,7 @@ bool Bint::operator>(const Bint &other) const
             return false;
         else
         {
-            for (int i = 0; i < length; i++)
+            for (int i = 0; i < length; ++i)
                 if (digits[i] < other.digits[i])
                     return false;
                 else if (digits[i] > other.digits[i])
@@ -216,7 +216,7 @@ bool Bint::operator>(const Bint &other) const
             return true;
         else
         {
-            for (int i = 0; i < length; i++)
+            for (int i = 0; i < length; ++i)
                 if (digits[i] < other.digits[i])
                     return true;
                 else if (digits[i] > other.digits[i])
@@ -300,7 +300,7 @@ Bint _absMinus(Bint c, Bint d)
         tot1--;
         tot2--;
     }
-    while (ans.size() > 1 && ans[0] == 0)
+    while (ans[0] == 0 && ans.size() > 1)
         ans.erase(ans.begin());
     return Bint(ans);
 }
@@ -347,15 +347,15 @@ Bint Bint::operator*(const Bint &other) const
     int length1 = digits.size();
     int length2 = other.digits.size();
     std::vector<Bint> tmp(length2);
-    for (int j = 0; j < length2; j++)
+    for (int j = 0; j < length2; ++j)
     {
         Bint x = (*this);
         tmp[j] = x._simpleTimes(other.digits[j]);
-        for (int k = 1; k <= length2 - j - 1; k++)
+        for (int k = 1; k <= length2 - j - 1; ++k)
             tmp[j].digits.push_back(0);
     }
     Bint ans;
-    for (int j = 0; j < length2; j++)
+    for (int j = 0; j < length2; ++j)
         ans = ans + tmp[j];
     ans.positive = positive * other.positive;
     return ans;
@@ -375,12 +375,12 @@ Bint Bint::operator/(const Bint &other) const
 
         std::vector<int> result = digits;
 
-        for (int i = 0; i < result.size(); i++)
+        for (int i = 0; i < result.size(); ++i)
             result[i] = 0;
 
         Bint current_dividend;
 
-        for (int i = 0; i < digits.size(); i++)
+        for (int i = 0; i < digits.size(); ++i)
         {
             int factor = 0;
             current_dividend = current_dividend * Bint("10") + Bint(digits[i]);
@@ -408,13 +408,23 @@ Bint Bint::operator%(const Bint &other) const
     return (*this) - other * ((*this) / other);
 }
 
+int Bint::sum() const
+{
+    int ans = 0;
+    for (int i = 0; i < digits.size(); ++i)
+    {
+        ans += digits[i];
+    }
+    return ans;
+}
+
 // 绝对值
-Bint Bint::abs() const
+inline Bint Bint::abs() const
 {
     return Bint(this->digits);
 }
 // 相反数
-Bint Bint::opposite() const
+inline Bint Bint::opposite() const
 {
     Bint ans = *this;
     ans.positive *= (-1);
@@ -422,12 +432,12 @@ Bint Bint::opposite() const
 }
 
 // 获取末位
-int Bint::end() const
+inline int Bint::end() const
 {
     return *(digits.end() - 1);
 }
 // 获取长度
-int Bint::length() const
+inline int Bint::length() const
 {
     return digits.size();
 }
@@ -435,21 +445,40 @@ int Bint::length() const
 // 是否是奇数
 bool Bint::isOdd() const
 {
-    if (this->end() % 2 == 0)
+    if (end() % 2 == 0)
         return false;
     return true;
 }
 // 是否是偶数
 bool Bint::isEven() const
 {
-    if (this->end() % 2 == 0)
+    if (end() % 2 == 0)
         return true;
     return false;
 }
 // 是否是 5 的倍数
 bool Bint::isMultipleOfFive() const
 {
-    if (this->end() % 5 == 0)
+    if (end() % 5 == 0)
         return true;
     return false;
+}
+
+// 是否是 0
+inline bool Bint::isZero() const
+{
+    if (positive == 0)
+        return true;
+    return false;
+}
+// 是否是 1
+inline bool Bint::isOne() const
+{
+    if (digits.size() > 1)
+        return false;
+    if (digits[0] != 1)
+        return false;
+    if (positive <= 0)
+        return false;
+    return true;
 }
