@@ -60,6 +60,8 @@ Bint randomBigNum(int len)
 // Miller-Rabin 素性验证
 bool isBigPrime(Bint a)
 {
+    if (a <= Bint(1))
+        return false;
     if (a.isEven())
         return false;
     if (a.isMultipleOfFive())
@@ -111,15 +113,20 @@ Bint randomBigPrime(int len)
     {
         ans = randomBigNum(len - 1);
         ans.digits.push_back(primeEnd[randomNum(0, 4)]);
+        while (ans.digits[0] == 0)
+            ans.digits.erase(ans.digits.begin());
+
         if (isBigPrime(ans))
             return ans;
     }
 }
 
 // 扩展 Euclidean
-Bint extendedEuclidean(Bint a, Bint b, Bint &x, Bint &y) {
+Bint extendedEuclidean(Bint a, Bint b, Bint &x, Bint &y)
+{
 
-    if (b == Bint(0)) {
+    if (b == Bint(0))
+    {
         x = Bint(1);
         y = Bint(0);
         return a;

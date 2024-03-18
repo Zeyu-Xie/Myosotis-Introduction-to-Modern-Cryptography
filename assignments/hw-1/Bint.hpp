@@ -21,7 +21,7 @@ private:
     Bint _simpleTimes(int a);
 
 public:
-    // 全部数位 
+    // 全部数位
     std::vector<int> digits;
 
     // 默认构造为 0
@@ -32,10 +32,10 @@ public:
     Bint(std::string s);
     // 从 std::vector<int> 构造
     Bint(std::vector<int> digits);
-    
+
     // 复制构造
     Bint(const Bint &other);
-    
+
     // 重载比较运算符
     bool operator==(const Bint &other) const;
     bool operator!=(const Bint &other) const;
