@@ -22,6 +22,7 @@ private:
 
 public:
     // 全部数位
+    bool positive;
     std::vector<int> digits;
 
     // 默认构造为 0
@@ -50,6 +51,9 @@ public:
     Bint operator*(const Bint &other) const;
     Bint operator/(const Bint &other) const;
     Bint operator%(const Bint &other) const;
+
+    // 绝对值
+    Bint abs();
 
     // 获取末位
     int end();

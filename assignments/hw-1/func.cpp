@@ -43,7 +43,7 @@ int randomNum(int a, int b)
 {
     std::random_device rd;
     std::mt19937 gen(rd());
-    std::uniform_int_distribution<int> dis(a, b);
+    std::uniform_int_distribution<int> dis(a, b-1);
     return dis(gen);
 }
 // 随机 Bint
@@ -83,6 +83,10 @@ bool isBigPrime(Bint a)
 
     for (int i = 0; i < 13; i++)
     {
+
+        if(smallPrimeList[i] >= a)
+            return true;
+
         d = d0;
         bool flag = true;
         if (powMod(smallPrimeList[i], d, a) == Bint(1))
@@ -115,7 +119,6 @@ Bint randomBigPrime(int len)
         ans.digits.push_back(primeEnd[randomNum(0, 4)]);
         while (ans.digits[0] == 0)
             ans.digits.erase(ans.digits.begin());
-
         if (isBigPrime(ans))
             return ans;
     }

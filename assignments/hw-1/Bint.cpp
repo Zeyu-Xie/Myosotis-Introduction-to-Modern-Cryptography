@@ -79,9 +79,9 @@ Bint Bint::_simpleTimes(int a)
 // Public
 
 // 默认构造为 0
-Bint::Bint() : digits(std::vector<int>({0})) {}
+Bint::Bint() : positive(true), digits(std::vector<int>({0})) {}
 // 从 int 构造
-Bint::Bint(int num)
+Bint::Bint(int num) : positive(true)
 {
     std::string s = std::to_string(num);
     digits = {};
@@ -89,24 +89,27 @@ Bint::Bint(int num)
         digits.push_back(s[i] - '0');
 }
 // 从 std::string 构造
-Bint::Bint(std::string s)
+Bint::Bint(std::string s) : positive(true)
 {
     digits = {};
     for (int i = 0; i < s.length(); i++)
         digits.push_back(s[i] - '0');
 }
 // 从 std::vector<int> 构造
-Bint::Bint(std::vector<int> digits) : digits(digits) {}
+Bint::Bint(std::vector<int> digits) : positive(true), digits(digits) {}
 
 // 复制构造
 Bint::Bint(const Bint &other)
 {
+    positive = other.positive;
     digits = other.digits;
 }
 
 // 重载比较运算符
 bool Bint::operator==(const Bint &other) const
 {
+    if (this->positive != other.positive)
+        return false;
     int length = digits.size();
     if (length != other.digits.size())
         return false;
@@ -124,6 +127,8 @@ bool Bint::operator==(const Bint &other) const
 }
 bool Bint::operator!=(const Bint &other) const
 {
+    if (this->positive != other.positive)
+        return true;
     int length = digits.size();
     if (length != other.digits.size())
         return true;
@@ -308,6 +313,12 @@ Bint Bint::operator/(const Bint &other) const
 Bint Bint::operator%(const Bint &other) const
 {
     return (*this) - other * ((*this) / other);
+}
+
+// 绝对值
+Bint Bint::abs()
+{
+    return Bint(this->digits);
 }
 
 // 获取末位
