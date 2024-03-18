@@ -43,14 +43,15 @@ int randomNum(int a, int b)
 {
     std::random_device rd;
     std::mt19937 gen(rd());
-    std::uniform_int_distribution<int> dis(a, b-1);
+    std::uniform_int_distribution<int> dis(a, b - 1);
     return dis(gen);
 }
 // 随机 Bint
 Bint randomBigNum(int len)
 {
     std::vector<int> digits(len);
-    for (int i = 0; i < len; i++)
+    digits[0] = randomNum(1, 10);
+    for (int i = 1; i < len; i++)
         digits[i] = randomNum(0, 10);
     while (digits.size() > 1 && digits[0] == 0)
         digits.erase(digits.begin());
@@ -84,7 +85,7 @@ bool isBigPrime(Bint a)
     for (int i = 0; i < 13; i++)
     {
 
-        if(smallPrimeList[i] >= a)
+        if (smallPrimeList[i] >= a)
             return true;
 
         d = d0;

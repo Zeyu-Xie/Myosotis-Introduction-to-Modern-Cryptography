@@ -398,8 +398,9 @@ Bint Bint::operator/(const Bint &other) const
 
         return Bint(result);
     }
-    else {
-        return ((opposite()-Bint(1))/other+Bint(1)).opposite();
+    else
+    {
+        return ((opposite() - Bint(1)) / other + Bint(1)).opposite();
     }
 }
 Bint Bint::operator%(const Bint &other) const
