@@ -18,8 +18,8 @@ int main()
 {
     while (1)
     {
-        p = randomBigPrime(2);
-        q = randomBigPrime(2);
+        p = randomBigPrime(4);
+        q = randomBigPrime(4);
         n = p * q;
         phi_n = (p - Bint(1)) * (q - Bint(1));
         if (phi_n % e <= Bint(0))
@@ -27,6 +27,8 @@ int main()
         else
         {
             _gcd = extendedEuclidean(e, phi_n, d, tmp);
+            if (d < Bint(0))
+                d = d % phi_n;
             break;
         }
     }

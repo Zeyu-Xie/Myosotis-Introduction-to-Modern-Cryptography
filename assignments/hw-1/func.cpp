@@ -139,7 +139,7 @@ Bint extendedEuclidean(Bint a, Bint b, Bint &x, Bint &y)
     Bint gcd = extendedEuclidean(b, a % b, x1, y1);
 
     x = y1;
-    y = x1 + (a / b) * y1;
+    y = x1 - (a / b) * y1;
 
     return gcd;
 }

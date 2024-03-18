@@ -12,10 +12,10 @@ int main()
     Bint a, b;
     while (1)
     {
-        a = Bint(randomNum(-100, 100));
-        b = Bint(randomNum(0, 10));
-        cout << a << " " << b << "\n";
-        cout << a / b << " " << a % b << "\n\n";
-        getchar();
+        Bint x, y;
+        cin>>a>>b;
+        Bint gcd = extendedEuclidean(a,b,x,y);
+        cout<<a<<"*"<<x<<"+"<<b<<"*"<<y<<"="<<1<<"\n";
     }
+    return 0;
 }
