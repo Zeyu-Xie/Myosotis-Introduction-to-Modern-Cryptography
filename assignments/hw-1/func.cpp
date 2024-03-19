@@ -3,41 +3,6 @@
 const int primeEnd[] = {1, 3, 7, 9};
 const Bint smallPrimeList[] = {Bint(2), Bint(3), Bint(5), Bint(7), Bint(11), Bint(13), Bint(17), Bint(19), Bint(23), Bint(29), Bint(31), Bint(37), Bint(41), Bint(43), Bint(47), Bint(53), Bint(59), Bint(61), Bint(67), Bint(71), Bint(73), Bint(79), Bint(83), Bint(89), Bint(97)};
 
-// 乘方
-Bint pow(Bint a, Bint b)
-{
-    if (b == Bint(0))
-        return Bint(1);
-    if (b % Bint(2) == 0)
-    {
-        Bint tmp = pow(a, b / Bint(2));
-        return tmp * tmp;
-    }
-    else
-    {
-        Bint tmp = pow(a, b / Bint(2));
-        return tmp * tmp * a;
-    }
-}
-// 乘方取余
-Bint powMod(Bint a, Bint b, Bint c)
-{
-    if (b == Bint(0))
-        return Bint(1);
-    if (a > c)
-        a = a % c;
-    if (b % Bint(2) == 0)
-    {
-        Bint tmp = powMod(a, b / Bint(2), c);
-        return (tmp * tmp) % c;
-    }
-    else
-    {
-        Bint tmp = powMod(a, b / Bint(2), c);
-        return (tmp * tmp * a) % c;
-    }
-}
-
 // 随机 int
 int randomNum(int a, int b)
 {
@@ -94,7 +59,7 @@ bool isBigPrime(Bint a)
 
         d = d0;
         bool flag = true;
-        Bint pm = powMod(smallPrimeList[i], d, a);
+        Bint pm = smallPrimeList[i].powMod(d, a);
         if (pm == Bint(1))
             continue;
         for (int r = 0; r < s; ++r)

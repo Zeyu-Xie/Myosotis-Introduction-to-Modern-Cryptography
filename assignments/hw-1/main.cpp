@@ -50,8 +50,8 @@ int main()
 
         cout << "\n";
 
-        encryptedText = powMod(plaintext, e, n);
-        decryptedText = powMod(encryptedText, d, n);
+        encryptedText = plaintext.powMod(e, n);
+        decryptedText = encryptedText.powMod(d, n);
 
         cout << "p: " << p << "\n";
         cout << "q: " << q << "\n";
