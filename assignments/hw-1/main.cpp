@@ -20,13 +20,17 @@ Bint e(65537), d;
 Bint tmp, _gcd;
 Bint plaintext, encryptedText, decryptedText;
 
+int total = 0;
+
 int main()
 {
+    freopen("log.txt", "w", stdout);
+
     cout << "----------\n";
 
     auto start = std::chrono::steady_clock::now();
 
-    while (1)
+    while (++total)
     {
         while (1)
         {
@@ -49,6 +53,7 @@ int main()
         encryptedText = plaintext.powMod(e, n);
         decryptedText = encryptedText.powMod(d, n);
 
+        cout << "No. " << total << "\n";
         cout << "p: " << p << "\n";
         cout << "q: " << q << "\n";
         cout << "n: " << n << "\n";
