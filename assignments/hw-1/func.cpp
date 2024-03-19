@@ -11,7 +11,7 @@ int randomNum(int a, int b)
     std::uniform_int_distribution<int> dis(a, b - 1);
     return dis(gen);
 }
-// 随机 Bint
+// 随机 Bint（按位数生成）
 Bint randomBigNum(int len)
 {
     std::vector<int> digits(len);
@@ -22,63 +22,6 @@ Bint randomBigNum(int len)
         digits.erase(digits.begin());
     return Bint(digits);
 }
-
-// Miller-Rabin 素性验证
-bool isBigPrime(Bint a)
-{
-    std::cout<<".";
-
-    if (a <= Bint(1))
-        return false;
-    if (a.isEven())
-        return false;
-    if (a.isMultipleOfFive())
-        return false;
-    if (a.isMultipleOfThree())
-        return false;
-
-    Bint a_1 = a - Bint(1);
-    Bint _2_s = Bint(1);
-    int s = 0;
-    Bint d = a_1;
-
-    while (d.isEven())
-    {
-        _2_s = _2_s + _2_s;
-        s += 1;
-        d = d / Bint(2);
-    }
-
-    Bint d0 = d;
-
-    for (int i = 0; i < 13; ++i)
-    {
-
-        if (smallPrimeList[i] >= a)
-            return true;
-
-        d = d0;
-        bool flag = true;
-        Bint pm = smallPrimeList[i].powMod(d, a);
-        if (pm == Bint(1))
-            continue;
-        for (int r = 0; r < s; ++r)
-        {
-            if (pm == a_1)
-            {
-                flag = false;
-                break;
-            }
-            d = d + d;
-            pm = pm * pm % a;
-        }
-        if (flag == true)
-            return false;
-    }
-
-    return true;
-}
-
 // 随机素数
 Bint randomBigPrime(int len)
 {
@@ -91,7 +34,7 @@ Bint randomBigPrime(int len)
         ans.digits.push_back(primeEnd[randomNum(0, 4)]);
         while (ans.digits[0] == 0)
             ans.digits.erase(ans.digits.begin());
-        if (isBigPrime(ans))
+        if (ans.isPrime())
             return ans;
     }
 }

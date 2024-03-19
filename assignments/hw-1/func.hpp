@@ -9,14 +9,9 @@
 
 // 随机 int
 int randomNum(int a, int b);
-// 随机 Bint
+// 随机 Bint（按位数生成）
 Bint randomBigNum(int len);
-
-// Miller-Rabin 素性验证
-bool isBigPrime(Bint a);
-
 // 随机素数
 Bint randomBigPrime(int len);
-
 // 扩展 Euclidean
 Bint extendedEuclidean(Bint a, Bint b, Bint &x, Bint &y);

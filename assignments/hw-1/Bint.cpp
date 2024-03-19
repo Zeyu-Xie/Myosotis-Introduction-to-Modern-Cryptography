@@ -448,7 +448,7 @@ Bint Bint::powMod(Bint b, Bint c) const
 // 绝对值
 Bint Bint::abs() const
 {
-    return Bint(this->digits);
+    return Bint(digits);
 }
 // 相反数
 Bint Bint::opposite() const
@@ -456,6 +456,34 @@ Bint Bint::opposite() const
     Bint ans = *this;
     ans.positive *= (-1);
     return ans;
+}
+
+// 转为 int
+int Bint::toInt() const
+{
+    if (length() > 10)
+        return -1;
+    int ans = 0, d = 1;
+    for (int i = length() - 1; i >= 0; --i)
+    {
+        ans += digits[i] * d;
+        d = (d << 3) + (d << 1);
+    }
+    if (positive < 0)
+        ans *= (-1);
+    return ans;
+}
+// 转为 string
+std::string Bint::toString() const
+{
+    std::string ans = positive >= 0 ? "" : "-";
+    std::string tmp;
+
+    std::ostringstream oss;
+    int l = length();
+    for (int i = 0; i < l; ++i)
+        oss << digits[i];
+    return ans + oss.str();
 }
 
 // 获取首位
@@ -573,6 +601,79 @@ bool Bint::isFive() const
         return false;
     if (positive <= 0)
         return false;
+    return true;
+}
+
+// 是否是素数
+const Bint y7gksjr8ejgosofj[] = {Bint(2), Bint(3), Bint(5), Bint(7), Bint(11), Bint(13), Bint(17), Bint(19), Bint(23), Bint(29), Bint(31), Bint(37), Bint(41), Bint(43), Bint(47), Bint(53), Bint(59), Bint(61), Bint(67), Bint(71), Bint(73), Bint(79), Bint(83), Bint(89), Bint(97)};                                                                                                                                                                                                                                                                                                                                                                                                                                       // <=100 的素数
+const bool d541f7e06fd1dd1e[] = {false, true, true, false, true, false, true, false, false, false, true, false, true, false, false, false, true, false, true, false, false, false, true, false, false, false, false, false, true, false, true, false, false, false, false, false, true, false, false, false, true, false, true, false, false, false, true, false, false, false, false, false, true, false, false, false, false, false, true, false, true, false, false, false, false, false, true, false, false, false, true, false, true, false, false, false, false, false, true, false, false, false, true, false, false, false, false, false, true, false, false, false, false, false, false, false, true, false, false}; // 1~9 的素性
+const Bint a3d794cb09d7dd2f[] = {Bint("341550071728321"), Bint("1646697619851137101"), Bint("1167748053436849501"), Bint("1144336081150073701"), Bint("1134931906634489281"), Bint("84983557412237221"), Bint("230245660726188031"), Bint("3825123056546413051")};                                                                                                                                                                                                                                                                                                                                                                                                                                                            // 8 pseudoprimes
+bool Bint::isPrime() const
+{
+    // <100 的数
+
+    // 非正数
+    if (positive <= 0)
+        return false;
+    // 一位数
+    if (length() == 1)
+        return d541f7e06fd1dd1e[digits[0] - 1];
+    // 两位数
+    if (length() == 2)
+        return d541f7e06fd1dd1e[digits[0] * 10 + digits[1] - 1];
+
+    // >=100 的数
+
+    // 排除 2、3、5 的倍数
+    if (isEven())
+        return false;
+    if (isMultipleOfThree())
+        return false;
+    if (isMultipleOfFive())
+        return false;
+    // 排除 8 个 pseudoprimes
+    for (int i = 0; i < 8; ++i)
+    {
+        if ((*this) == a3d794cb09d7dd2f[i])
+            return false;
+    }
+
+    // Miller-Rabin Main Part
+    Bint a_1 = (*this) - Bint_one;
+    Bint _2_s = Bint_one;
+    int s = 0;
+    Bint d = a_1;
+
+    while (d.isEven())
+    {
+        _2_s = _2_s + _2_s;
+        s += 1;
+        d = d / Bint_two;
+    }
+
+    Bint d0 = d;
+
+    for (int i = 0; i < 8; ++i)
+    {
+        d = d0;
+        bool flag = true;
+        Bint pm = y7gksjr8ejgosofj[i].powMod(d, (*this));
+        if (pm.isOne())
+            continue;
+        for (int r = 0; r < s; ++r)
+        {
+            if (pm == a_1)
+            {
+                flag = false;
+                break;
+            }
+            d = d + d;
+            pm = pm * pm % (*this);
+        }
+        if (flag == true)
+            return false;
+    }
+
     return true;
 }
 

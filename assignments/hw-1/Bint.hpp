@@ -7,6 +7,7 @@
 #include <algorithm>
 #include <vector>
 #include <cmath>
+#include <sstream>
 
 class Bint
 {
@@ -58,12 +59,16 @@ public:
     // 乘方
     Bint pow(Bint c) const;
     Bint powMod(Bint b, Bint c) const;
-    
 
     // 绝对值
     Bint abs() const;
     // 相反数
     Bint opposite() const;
+
+    // 转为 int
+    int toInt() const;
+    // 转为 string
+    std::string toString() const;
 
     // 获取首位
     int begin() const;
@@ -95,6 +100,9 @@ public:
     bool isFour() const;
     // 是否是 5
     bool isFive() const;
+
+    // 是否是素数
+    bool isPrime() const;
 
     // 静态公开常量
     static const Bint Bint_zero;

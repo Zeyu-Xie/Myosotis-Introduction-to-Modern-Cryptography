@@ -28,13 +28,11 @@ int main()
 
     while (1)
     {
-        cout << "Process: ";
-
         while (1)
         {
-            p = randomBigPrime(24);
-            q = randomBigPrime(24);
-            plaintext = randomBigNum(23);
+            p = randomBigPrime(40);
+            q = randomBigPrime(40);
+            plaintext = randomBigNum(39);
             n = p * q;
             phi_n = (p - Bint(1)) * (q - Bint(1));
             if (phi_n % e <= Bint(0))
@@ -47,8 +45,6 @@ int main()
                 break;
             }
         }
-
-        cout << "\n";
 
         encryptedText = plaintext.powMod(e, n);
         decryptedText = encryptedText.powMod(d, n);
