@@ -17,16 +17,19 @@ std::ostream &operator<<(std::ostream &os, const Bint &bint)
     return os;
 }
 
+// 静态私密常量
+const Bint Bint::_small_primes[] = {Bint(2), Bint(3), Bint(5), Bint(7), Bint(11), Bint(13), Bint(17), Bint(19), Bint(23), Bint(29), Bint(31), Bint(37), Bint(41), Bint(43), Bint(47), Bint(53), Bint(59), Bint(61), Bint(67), Bint(71), Bint(73), Bint(79), Bint(83), Bint(89), Bint(97)};
+
 // Private
 
 // 去除前面多余的 0
-inline void Bint::_remove_front_zeros()
+void Bint::_remove_front_zeros()
 {
     while (digits[0] == 0 && digits.size() > 1)
         digits.erase(digits.begin());
 }
 // 与 int 类型 0~9 相乘
-inline Bint Bint::_simpleTimes(int a)
+Bint Bint::_simpleTimes(int a)
 {
     int length = digits.size();
     std::vector<int> ans(length);
@@ -408,6 +411,69 @@ Bint Bint::operator%(const Bint &other) const
     return (*this) - other * ((*this) / other);
 }
 
+// 乘方
+Bint Bint::pow(Bint c) const
+{
+    if (c.isZero())
+        return Bint_one;
+    if (c % Bint_two == 0)
+    {
+        Bint tmp = pow(c / Bint_two);
+        return tmp * tmp;
+    }
+    else
+    {
+        Bint tmp = pow(c / Bint_two);
+        return tmp * tmp * (*this);
+    }
+}
+Bint Bint::powMod(Bint b, Bint c) const
+{
+    if (b.isZero())
+        return Bint_one;
+    if (*this > c)
+        return ((*this) / c).powMod(b, c);
+    if (b % Bint_two == 0)
+    {
+        Bint tmp = powMod(b / Bint_two, c);
+        return (tmp * tmp) % c;
+    }
+    else
+    {
+        Bint tmp = powMod(b / Bint_two, c);
+        return (tmp * tmp * (*this)) % c;
+    }
+}
+
+// 绝对值
+Bint Bint::abs() const
+{
+    return Bint(this->digits);
+}
+// 相反数
+Bint Bint::opposite() const
+{
+    Bint ans = *this;
+    ans.positive *= (-1);
+    return ans;
+}
+
+// 获取首位
+int Bint::begin() const
+{
+    return *(digits.begin());
+}
+// 获取末位
+int Bint::end() const
+{
+    return *(digits.end() - 1);
+}
+// 获取长度
+int Bint::length() const
+{
+    return digits.size();
+}
+// 数位之和
 int Bint::sum() const
 {
     int ans = 0;
@@ -416,30 +482,6 @@ int Bint::sum() const
         ans += digits[i];
     }
     return ans;
-}
-
-// 绝对值
-inline Bint Bint::abs() const
-{
-    return Bint(this->digits);
-}
-// 相反数
-inline Bint Bint::opposite() const
-{
-    Bint ans = *this;
-    ans.positive *= (-1);
-    return ans;
-}
-
-// 获取末位
-inline int Bint::end() const
-{
-    return *(digits.end() - 1);
-}
-// 获取长度
-inline int Bint::length() const
-{
-    return digits.size();
 }
 
 // 是否是奇数
@@ -456,6 +498,13 @@ bool Bint::isEven() const
         return true;
     return false;
 }
+// 是否是 3 的倍数
+bool Bint::isMultipleOfThree() const
+{
+    if (sum() % 3 == 0)
+        return true;
+    return false;
+}
 // 是否是 5 的倍数
 bool Bint::isMultipleOfFive() const
 {
@@ -465,14 +514,14 @@ bool Bint::isMultipleOfFive() const
 }
 
 // 是否是 0
-inline bool Bint::isZero() const
+bool Bint::isZero() const
 {
     if (positive == 0)
         return true;
     return false;
 }
 // 是否是 1
-inline bool Bint::isOne() const
+bool Bint::isOne() const
 {
     if (digits.size() > 1)
         return false;
@@ -482,3 +531,53 @@ inline bool Bint::isOne() const
         return false;
     return true;
 }
+// 是否是 2
+bool Bint::isTwo() const
+{
+    if (digits.size() > 1)
+        return false;
+    if (digits[0] != 2)
+        return false;
+    if (positive <= 0)
+        return false;
+    return true;
+}
+// 是否是 3
+bool Bint::isThree() const
+{
+    if (digits.size() > 1)
+        return false;
+    if (digits[0] != 3)
+        return false;
+    if (positive <= 0)
+        return false;
+    return true;
+}
+// 是否是 4
+bool Bint::isFour() const
+{
+    if (digits.size() > 1)
+        return false;
+    if (digits[0] != 4)
+        return false;
+    if (positive <= 0)
+        return false;
+    return true;
+}
+// 是否是 5
+bool Bint::isFive() const
+{
+    if (digits.size() > 1)
+        return false;
+    if (digits[0] != 5)
+        return false;
+    if (positive <= 0)
+        return false;
+    return true;
+}
+
+// 静态公开常量
+const Bint Bint::Bint_zero = Bint();
+const Bint Bint::Bint_one = Bint(1);
+const Bint Bint::Bint_two = Bint(2);
+const Bint Bint::Bint_three = Bint(3);

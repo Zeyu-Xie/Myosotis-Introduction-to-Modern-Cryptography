@@ -4,7 +4,7 @@ const int primeEnd[] = {1, 3, 7, 9};
 const Bint smallPrimeList[] = {Bint(2), Bint(3), Bint(5), Bint(7), Bint(11), Bint(13), Bint(17), Bint(19), Bint(23), Bint(29), Bint(31), Bint(37), Bint(41), Bint(43), Bint(47), Bint(53), Bint(59), Bint(61), Bint(67), Bint(71), Bint(73), Bint(79), Bint(83), Bint(89), Bint(97)};
 
 // 乘方
-inline Bint pow(Bint a, Bint b)
+Bint pow(Bint a, Bint b)
 {
     if (b == Bint(0))
         return Bint(1);
@@ -39,7 +39,7 @@ Bint powMod(Bint a, Bint b, Bint c)
 }
 
 // 随机 int
-inline int randomNum(int a, int b)
+int randomNum(int a, int b)
 {
     std::random_device rd;
     std::mt19937 gen(rd());
@@ -59,9 +59,9 @@ Bint randomBigNum(int len)
 }
 
 // Miller-Rabin 素性验证
-inline bool isBigPrime(Bint a)
+bool isBigPrime(Bint a)
 {
-    std::cout<<a<<"\n";
+    std::cout<<".";
 
     if (a <= Bint(1))
         return false;
@@ -69,7 +69,7 @@ inline bool isBigPrime(Bint a)
         return false;
     if (a.isMultipleOfFive())
         return false;
-    if (a.sum() % 3 == 0)
+    if (a.isMultipleOfThree())
         return false;
 
     Bint a_1 = a - Bint(1);

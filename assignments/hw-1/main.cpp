@@ -22,12 +22,14 @@ Bint plaintext, encryptedText, decryptedText;
 
 int main()
 {
-    std::ios::sync_with_stdio(false);
+    cout << "----------\n";
 
     auto start = std::chrono::steady_clock::now();
 
     while (1)
     {
+        cout << "Process: ";
+
         while (1)
         {
             p = randomBigPrime(24);
@@ -45,6 +47,8 @@ int main()
                 break;
             }
         }
+
+        cout << "\n";
 
         encryptedText = powMod(plaintext, e, n);
         decryptedText = powMod(encryptedText, d, n);

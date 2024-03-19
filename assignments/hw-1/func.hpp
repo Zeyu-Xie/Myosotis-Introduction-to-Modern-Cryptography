@@ -8,17 +8,17 @@
 #include <random>
 
 // 乘方
-inline Bint pow(Bint a, Bint b);
+Bint pow(Bint a, Bint b);
 // 乘方取余
 Bint powMod(Bint a, Bint b, Bint c);
 
 // 随机 int
-inline int randomNum(int a, int b);
+int randomNum(int a, int b);
 // 随机 Bint
 Bint randomBigNum(int len);
 
 // Miller-Rabin 素性验证
-inline bool isBigPrime(Bint a);
+bool isBigPrime(Bint a);
 
 // 随机素数
 Bint randomBigPrime(int len);
