@@ -21,6 +21,24 @@ P.S. Alternatively, you may choose to run the makefile independently without usi
 
 ### RSA Encryption/Decryption
 
+Given a short string s (no more than 128 bits), we would like to encrypt and decrypt it with RSA-128.
+
+First, transfer s to a large integer M. We have $M<2^{128}<10^{39}$.
+
+Then find two random prime numbers p and q, such that $p,q\geq10^{40}>10^{39}>M$.
+
+Let $n=pq$ so we have $\phi(n)=(p-1)(q-1)$.
+
+Let $e=2^{16}+1=65537$​, it is proved that e is a prime number. We want $\gcd(e,p-1)=\gcd(e,q-1)=\gcd(e,\phi(n))=1$, otherwise it's necessary to regenerate p and q until success.
+
+Use extended Euclidean algorithm we can find d such that $d\equiv e^{-1}\bmod{\phi(n)}$.
+
+With these variants we define the RSA public key as (n, e) and private key (n, d).
+
+During encryption we calculate $M'\equiv M^e\bmod{n}$, and $M'$ becomes the encrypted data. During decryption we calculate $M''\equiv(M')^d\equiv M^{ed}\bmod{n}$. Accoring to Euler's Theorem we know $M^{\phi{n}}\equiv 1\bmod{n}$, and hence $M^{ed}\equiv M^{k\phi(n)+1}\equiv M\bmod{n}$​.
+
+$M''=M$ is the plaintext and decrypted data.
+
 ### Miller-Rabin Test
 
 ## References
