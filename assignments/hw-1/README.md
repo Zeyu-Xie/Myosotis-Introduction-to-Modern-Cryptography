@@ -1,4 +1,4 @@
-*谢泽钰 2020012544 致理-数02*
+*<small>谢泽钰 2020012544 致理-数02</small>*
 
 # HW-1 RSA Encryption/Decryption Cryptosystem Implementation
 
@@ -21,24 +21,55 @@ P.S. Alternatively, you may choose to run the makefile independently without usi
 
 ### RSA Encryption/Decryption
 
-Given a short string s (no more than 128 bits), we would like to encrypt and decrypt it with RSA-128.
+Given a short string s (no more than 128 bits), we aim to encrypt and decrypt it with RSA-128.
 
-First, transfer s to a large integer M. We have $M<2^{128}<10^{39}$.
+Firstly, we convert s into a large integer M, ensuring that $M<2^{128}<10^{39}$.
 
-Then find two random prime numbers p and q, such that $p,q\geq10^{40}>10^{39}>M$.
+Next, we find two random prime numbers p and q such that $p,q\geq10^{40}>10^{39}>M$.
 
-Let $n=pq$ so we have $\phi(n)=(p-1)(q-1)$.
+Let $n=pq$, hence $\phi(n)=(p-1)(q-1)$.
 
-Let $e=2^{16}+1=65537$​, it is proved that e is a prime number. We want $\gcd(e,p-1)=\gcd(e,q-1)=\gcd(e,\phi(n))=1$, otherwise it's necessary to regenerate p and q until success.
+Let $e=2^{16}+1=65537$, it is established that e is a prime number. We require $\gcd(e,p-1)=\gcd(e,q-1)=\gcd(e,\phi(n))=1$. If this condition is not met, we regenerate p and q until success.
 
-Use extended Euclidean algorithm we can find d such that $d\equiv e^{-1}\bmod{\phi(n)}$.
+Using the extended Euclidean algorithm, we can find d such that $d\equiv e^{-1}\bmod{\phi(n)}$.
 
-With these variants we define the RSA public key as (n, e) and private key (n, d).
+With these parameters, we define the RSA public key as (n, e) and the private key as (n, d).
 
-During encryption we calculate $M'\equiv M^e\bmod{n}$, and $M'$ becomes the encrypted data. During decryption we calculate $M''\equiv(M')^d\equiv M^{ed}\bmod{n}$. Accoring to Euler's Theorem we know $M^{\phi{n}}\equiv 1\bmod{n}$, and hence $M^{ed}\equiv M^{k\phi(n)+1}\equiv M\bmod{n}$​.
+During encryption, we calculate $M'\equiv M^e\bmod{n}$, and $M'$ becomes the encrypted data. During decryption, we compute $M''\equiv(M')^d\equiv M^{ed}\bmod{n}$. Accoring to Euler's Theorem, $M^{\phi{n}}\equiv 1\bmod{n}$, thus $M^{ed}\equiv M^{k\phi(n)+1}\equiv M\bmod{n}$​.
 
-$M''=M$ is the plaintext and decrypted data.
+Hence, $M''=M$ represents the plaintext and decrypted data.
 
 ### Miller-Rabin Test
 
+We seek to determine whether an positive integer n is prime. For small n, we can attempt division with all prime number $p\leq n$. However, this approach costs $O(\sqrt{n})$ time, which becomes impractical for large n.
+
+Miller-Rabin devised a clever method to address this issue.
+
+Given a prime number p and another positive integer a such that $\gcd(a,p)=1$, by Fermat Little Theorem, we have $a^{p-1}\equiv 1\bmod p$. Suppose $p-1=2^sd$, then we consider the following s numbers: $a^d, a^{2d}, a^{2^2d},...,a^{2^{s-1}d}\bmod p$.
+
+If none of these are congruent to $-1\bmod p$, then we obtain $a^d\equiv1\bmod p$. Otherwise,  $-1\in \{a^d, a^{2d}, a^{2^2d}, ..., a^{2^{s-1}d}\}\bmod p$.
+
+Conversely, if there exists a number a comprime to n $(n\geq2)$, such that
+$$
+\begin{equation} \label{eq:1}
+\left\{
+\begin{aligned} 
+    a^d &\not\equiv 1 \pmod{n} \\
+    -1 &\not\in \{a^d, a^{2d}, a^{2^2d}, \dots, a^{2^{s-1}d}\} \pmod{n}
+\end{aligned}
+\right.
+\end{equation}
+$$
+then n is not a prime number.
+
+For a composite number n and a positive integer a such that $\gcd(a,n)=1$, if a satisfies $\eqref{eq:1}$ it is termed a "witness" of n. For a prime number n such that none of the first m prime numbers (i.e. $P_m=\{p_1=2, p2=3,...,p_m\}$) is a witness of n, then n is called a "pseudoprime" of m.
+
+When $m=8$, $P_8=\{2,3,5,7,11,13,17,19\}$. It has been proved (*Jiang and Deng, 2014*) that in the range of $[1, Q_{11}]$, there are only 8 pseudoprimes. Thus, it suffices to test $P_8$ and exclude those 8 pseudoprimes.
+
+However, for a larger range than $[1, Q_{11}]$, information on pseudoprimes remains unknown. Therefore, there are still risks in directly using $P_8$.
+
 ## References
+
+1. *Jiang, Yupeng; Deng, Yingpu (2014). "Strong pseudoprimes to the first eight prime bases". Mathematics of Computation. 83 (290): 2915–2924.*
+2. *National Institute of Standards and Technology. (2020). Federal Information Processing Standards Publication 186-5: Digital Signature Standard (DSS). Retrieved from https://doi.org/10.6028/NIST.FIPS.186-5*
+3. *Wikipedia contributors. (2024, March 12). Miller–Rabin primality test. In Wikipedia, The Free Encyclopedia. Retrieved 05:16, March 20, 2024, from https://en.wikipedia.org/w/index.php?title=Miller%E2%80%93Rabin_primality_test&oldid=1213361293*
