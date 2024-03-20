@@ -24,8 +24,6 @@ int total = 0;
 
 int main()
 {
-    freopen("log.txt", "w", stdout);
-
     cout << "----------\n";
 
     auto start = std::chrono::steady_clock::now();
