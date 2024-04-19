@@ -112,15 +112,12 @@ def generateKey(keySize):
     
     # Step 1: Create two prime numbers, p and q. Calculate n
     # = p * q.
-    print('Generating p prime...')
     p = generateLargePrime(keySize)
-    print('Generating q prime...')
     q = generateLargePrime(keySize)
     n = p * q
 
     # Step 2: Create a number e that is relatively prime to (
     # p-1)*(q-1).
-    print('Generating e that is relatively prime to (p-1)*(q-1)...')
     while True:
         # Keep trying random numbers for e until one is valid
         e = random.randrange(2 ** (keySize - 1), 2 ** (keySize))
@@ -128,47 +125,18 @@ def generateKey(keySize):
             break
 
     # Step 3: Calculate d, the mod inverse of e.
-    print('Calculating d that is mod inverse of e...')
     d = findModInverse(e, (p - 1) * (q - 1))
 
-    publicKey = (n, e)
-    privateKey = (n, d)
+    publicKey = f"{keySize},{n},{e}"
+    privateKey = f"{keySize},{n},{d}"
 
     return (publicKey, privateKey)
-
-# RSA Cipher
-# http://inventwithpython.com/hacking (BSD Licensed)
 
 # IMPORTANT: The block size MUST be less than or equal to the key size!
 # (Note: The block size is in bytes, the key size is in bits. There
 # are 8 bits in 1 byte.)
 DEFAULT_BLOCK_SIZE = 128 # 128 bytes
 BYTE_SIZE = 256 # One byte has 256 different values.
-
-def main():
-    # Runs a test that encrypts a message to a file or decrypts a message
-    # from a file.
-    filename = 'encrypted_file.txt' # the file to write to/read from
-    mode = 'encrypt' # set to 'encrypt' or 'decrypt'
-    
-    if mode == 'encrypt':
-        message = '''"Journalists belong in the gutter because that is where the ruling classes throw their guilty secrets."
--Gerald Priestland "The Founding Fathers gave the free press the
-protection it must have to bare the secrets of government and inform the people." -Hugo Black'''
-        pubKeyFilename = 'al_sweigart_pubkey.txt'
-        print('Encrypting and writing to %s...' % (filename))
-        encryptedText = encryptAndWriteToFile(filename, pubKeyFilename, message)
-        
-        print('Encrypted text:')
-        print(encryptedText)
-        
-    elif mode == 'decrypt':
-        privKeyFilename = 'al_sweigart_privkey.txt'
-        print('Reading from %s and decrypting...' % (filename))
-        decryptedText = readFromFileAndDecrypt(filename, privKeyFilename)
-        
-        print('Decrypted text:')
-        print(decryptedText)
 
 def getBlocksFromText(message, blockSize=DEFAULT_BLOCK_SIZE):
     # Converts a string message to a list of block integers. Each integer
@@ -227,16 +195,14 @@ def decryptMessage(encryptedBlocks, messageLength, key, blockSize=DEFAULT_BLOCK_
 def readKeyFile(keyFilename):
     # Given the filename of a file that contains a public or private key,
     # return the key as a (n,e) or (n,d) tuple value.
-    fo = open(keyFilename)
-    content = fo.read()
-    fo.close()
+    content = keyFilename
     keySize, n, EorD = content.split(',')
     return (int(keySize), int(n), int(EorD))
 
-def encryptAndWriteToFile(messageFilename, keyFilename, message, blockSize=DEFAULT_BLOCK_SIZE):
+def encrypt(message, key, blockSize=DEFAULT_BLOCK_SIZE):
     # Using a key from a key file, encrypt the message and save it to a
     # file. Returns the encrypted message string.
-    keySize, n, e = readKeyFile(keyFilename)
+    keySize, n, e = readKeyFile(key)
     
     # Check that key size is greater than block size.
     if keySize < blockSize * 8: # * 8 to convert bytes to bits
@@ -252,20 +218,19 @@ def encryptAndWriteToFile(messageFilename, keyFilename, message, blockSize=DEFAU
     
     # Write out the encrypted string to the output file.
     encryptedContent = '%s_%s_%s' % (len(message), blockSize, encryptedContent)
-    fo = open(messageFilename, 'w')
-    fo.write(encryptedContent)
-    fo.close()
+    # fo = open(messageFilename, 'w')
+    # fo.write(encryptedContent)
+    # fo.close()
     # Also return the encrypted string.
     return encryptedContent
 
-def readFromFileAndDecrypt(messageFilename, keyFilename):
+def decrypt(message, key):
     # Using a key from a key file, read an encrypted message from a file
     # and then decrypt it. Returns the decrypted message string.
-    keySize, n, d = readKeyFile(keyFilename)
+    keySize, n, d = readKeyFile(key)
     
     # Read in the message length and the encrypted message from the file.
-    fo = open(messageFilename)
-    content = fo.read()
+    content = message
     messageLength, blockSize, encryptedMessage = content.split('_')
     messageLength = int(messageLength)
     blockSize = int(blockSize)
@@ -285,7 +250,13 @@ def readFromFileAndDecrypt(messageFilename, keyFilename):
 # If rsaCipher.py is run (instead of imported as a module) call
 # the main() function.
 if __name__ == '__main__':
-    length = 1024
-    pub, pri = generateKey(length)
-    print(pub)
-    print(pri)
+    pub, pri = generateKey(1024)
+    print(f"Public Key: {pub}")
+    print(f"Private Key: {pri}")
+
+    message = "Hello World!"
+    enc = encrypt(message = message, key = pub, blockSize=128)
+    print(f"Encrypted: {enc}")
+
+    dec = decrypt(message = enc, key = pri)
+    print(f"Decrypted: {dec}")
