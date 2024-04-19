@@ -76,11 +76,3 @@ def generateLargePrime(keysize=1024):
         num = random.randrange(2**(keysize-1), 2**(keysize))
         if isPrime(num):
             return num
-
-if __name__ == "__main__":
-
-    # Test whether 643 is a prime number
-    print('isPrime(643) =', isPrime(643))
-
-    # Generate a random prime number of 1024 bits
-    print('generateLargePrime(1024) =', generateLargePrime(1024))

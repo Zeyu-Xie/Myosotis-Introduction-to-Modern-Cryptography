@@ -1,3 +1,6 @@
+# Cryptomath Module
+# http://inventwithpython.com/hacking (BSD Licensed)
+
 def gcd(a, b):
     # Return the GCD of a and b using Euclid's Algorithm
     while a != 0:

@@ -1,5 +1,7 @@
-import random, sys, os
-import _rabinMiller as rabinMiller, _cryptomath as cryptomath
+# RSA Key Generator
+# http://inventwithpython.com/hacking (BSD Licensed)
+
+import random, sys, os, rabinMiller, cryptomath
 
 def main():
     # create a public/private keypair with 1024 bit keys
